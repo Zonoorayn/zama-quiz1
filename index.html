@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zama Protocol Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 40px auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #334155;
+      color: white;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zama Protocol Quiz</h1>
+  <div class="card">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <p id="progress"></p>
+    <p id="score"></p>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "What is the main goal of the Zama Protocol?", options: ["To speed up blockchain transactions", "To build private smart contracts using encrypted data", "To replace EVM with a new programming language", "To store off-chain data on IPFS"], correct: 1 },
+      { q: "Which encryption technology powers the Zama Protocol?", options: ["Zero-Knowledge Proofs", "Multi-Signature Encryption", "Fully Homomorphic Encryption (FHE)", "Advanced Hash Encoding"], correct: 2 },
+      { q: "What does FHE allow developers to do?", options: ["Hide the smart contract code", "Compute directly on encrypted data", "Compress blockchain data", "Decrypt transactions publicly"], correct: 1 },
+      { q: "What is FHEVM?", options: ["A new blockchain consensus algorithm", "A virtual machine that runs encrypted smart contracts", "A mobile crypto wallet", "A key management token"], correct: 1 },
+      { q: "Which programming language is used to write contracts in Zama Protocol?", options: ["Python", "Go", "Solidity", "Rust"], correct: 2 },
+      { q: "What does the Zama Protocol combine to maintain performance and privacy?", options: ["On-chain and off-chain components", "Public and private blockchains", "Decentralized and centralized databases", "Open-source and closed-source tools"], correct: 0 },
+      { q: "What is the main role of the Key Management Service (KMS)?", options: ["To store user passwords", "To generate and manage encryption keys securely", "To mine encrypted blocks", "To compress blockchain data"], correct: 1 },
+      { q: "What are coprocessors responsible for in the protocol?", options: ["Managing NFT minting", "Running off-chain encrypted computations", "Building blockchain bridges", "Handling token swaps"], correct: 1 },
+      { q: "What does the Gateway do?", options: ["It manages encrypted data flow and coordinates off-chain services", "It hosts the blockchain explorer", "It sends marketing emails", "It controls gas fees"], correct: 0 },
+      { q: "Which of the following is NOT part of Zama Protocol’s architecture?", options: ["FHEVM Solidity Library", "Gateway", "Coprocessor", "Proof-of-Stake Validator"], correct: 3 },
+      { q: "What type of data does the Zama Protocol keep encrypted?", options: ["Only metadata", "Transaction amounts and user data", "Chain IDs", "Source codes"], correct: 1 },
+      { q: "What warning is included in the official docs about the testnet?", options: ["It is unstable but safe to store funds", "It is audited and ready for production", "It is not audited and not for production use", "It requires mining before testing"], correct: 2 },
+      { q: "Which of these is an example use-case for Zama Protocol?", options: ["Open DeFi dashboards", "Confidential auctions and voting", "Token burning", "Wallet authentication"], correct: 1 },
+      { q: "What are the encrypted Solidity types introduced by FHEVM?", options: ["euint, eint, ebool, ebytes", "privuint, cryptoint, secretbool", "uint_priv, int_priv", "sealuint, sealint"], correct: 0 },
+      { q: "What is a main advantage of Zama Protocol for blockchain developers?", options: ["They can run private computations while keeping composability", "They can remove all smart contract fees", "They can hide contract logic from themselves", "They can bypass EVM gas usage"], correct: 0 },
+    ];
+
+    let current = 0, score = 0;
+    const qEl = document.getElementById("question");
+    const oEl = document.getElementById("options");
+    const pEl = document.getElementById("progress");
+    const sEl = document.getElementById("score");
+
+    function loadQuestion() {
+      const q = questions[current];
+      qEl.textContent = q.q;
+      oEl.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(i);
+        oEl.appendChild(btn);
+      });
+      pEl.textContent = `Question ${current + 1} of ${questions.length}`;
+      sEl.textContent = "";
+    }
+
+    function handleAnswer(i) {
+      if (i === questions[current].correct) score++;
+      current++;
+      if (current < questions.length) loadQuestion();
+      else showResult();
+    }
+
+    function showResult() {
+      qEl.textContent = "🎉 Quiz Completed!";
+      oEl.innerHTML = "";
+      sEl.textContent = `You scored ${score} out of ${questions.length}`;
+      const retry = document.createElement("button");
+      retry.textContent = "Retry Quiz";
+      retry.onclick = () => { current = 0; score = 0; sEl.textContent = ""; loadQuestion(); };
+      oEl.appendChild(retry);
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
