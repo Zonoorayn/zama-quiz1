@@ -1,108 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zama Protocol Quiz</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-    }
-    .card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 500px;
-      margin: 40px auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    }
-    button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #334155;
-      color: white;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #475569;
-    }
-  </style>
-</head>
-<body>
-  <h1>Zama Protocol Quiz</h1>
-  <div class="card">
-    <h2 id="question"></h2>
-    <div id="options"></div>
-    <p id="progress"></p>
-    <p id="score"></p>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zama Protocol Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full bg-gray-800 p-8 rounded-2xl shadow-xl text-center">
+      <h1 class="text-3xl font-bold mb-6 text-indigo-400">Zama Protocol Quiz</h1>
+      <div id="quiz">
+        <p id="question" class="text-lg mb-4 font-medium"></p>
+        <div id="options" class="flex flex-col gap-3"></div>
+        <button id="next-btn" class="mt-6 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition">Next</button>
+      </div>
+      <div id="result" class="hidden">
+        <h2 class="text-2xl font-bold mb-4 text-green-400">Your Score</h2>
+        <p id="score" class="text-lg mb-6"></p>
+        <button id="retry-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg">Try Again</button>
+      </div>
+    </div>
 
-  <script>
-    const questions = [
-      { q: "What is the main goal of the Zama Protocol?", options: ["To speed up blockchain transactions", "To build private smart contracts using encrypted data", "To replace EVM with a new programming language", "To store off-chain data on IPFS"], correct: 1 },
-      { q: "Which encryption technology powers the Zama Protocol?", options: ["Zero-Knowledge Proofs", "Multi-Signature Encryption", "Fully Homomorphic Encryption (FHE)", "Advanced Hash Encoding"], correct: 2 },
-      { q: "What does FHE allow developers to do?", options: ["Hide the smart contract code", "Compute directly on encrypted data", "Compress blockchain data", "Decrypt transactions publicly"], correct: 1 },
-      { q: "What is FHEVM?", options: ["A new blockchain consensus algorithm", "A virtual machine that runs encrypted smart contracts", "A mobile crypto wallet", "A key management token"], correct: 1 },
-      { q: "Which programming language is used to write contracts in Zama Protocol?", options: ["Python", "Go", "Solidity", "Rust"], correct: 2 },
-      { q: "What does the Zama Protocol combine to maintain performance and privacy?", options: ["On-chain and off-chain components", "Public and private blockchains", "Decentralized and centralized databases", "Open-source and closed-source tools"], correct: 0 },
-      { q: "What is the main role of the Key Management Service (KMS)?", options: ["To store user passwords", "To generate and manage encryption keys securely", "To mine encrypted blocks", "To compress blockchain data"], correct: 1 },
-      { q: "What are coprocessors responsible for in the protocol?", options: ["Managing NFT minting", "Running off-chain encrypted computations", "Building blockchain bridges", "Handling token swaps"], correct: 1 },
-      { q: "What does the Gateway do?", options: ["It manages encrypted data flow and coordinates off-chain services", "It hosts the blockchain explorer", "It sends marketing emails", "It controls gas fees"], correct: 0 },
-      { q: "Which of the following is NOT part of Zama Protocol’s architecture?", options: ["FHEVM Solidity Library", "Gateway", "Coprocessor", "Proof-of-Stake Validator"], correct: 3 },
-      { q: "What type of data does the Zama Protocol keep encrypted?", options: ["Only metadata", "Transaction amounts and user data", "Chain IDs", "Source codes"], correct: 1 },
-      { q: "What warning is included in the official docs about the testnet?", options: ["It is unstable but safe to store funds", "It is audited and ready for production", "It is not audited and not for production use", "It requires mining before testing"], correct: 2 },
-      { q: "Which of these is an example use-case for Zama Protocol?", options: ["Open DeFi dashboards", "Confidential auctions and voting", "Token burning", "Wallet authentication"], correct: 1 },
-      { q: "What are the encrypted Solidity types introduced by FHEVM?", options: ["euint, eint, ebool, ebytes", "privuint, cryptoint, secretbool", "uint_priv, int_priv", "sealuint, sealint"], correct: 0 },
-      { q: "What is a main advantage of Zama Protocol for blockchain developers?", options: ["They can run private computations while keeping composability", "They can remove all smart contract fees", "They can hide contract logic from themselves", "They can bypass EVM gas usage"], correct: 0 },
-    ];
+    <script>
+      const quizData = [
+        { question: "What technology is Zama based on?", options: ["Blockchain", "Fully Homomorphic Encryption", "AI", "ZK Proofs"], answer: 1 },
+        { question: "What does FHE stand for?", options: ["Full Hash Encoding", "Fast Homomorphic Encryption", "Fully Homomorphic Encryption", "Functional Hash Engine"], answer: 2 },
+        { question: "Zama's main focus is on?", options: ["DeFi", "Privacy in computation", "NFTs", "Gaming"], answer: 1 },
+        { question: "What does the FHEVM enable?", options: ["Computing on encrypted data", "Faster mining", "Data deletion", "Smart contract compression"], answer: 0 },
+        { question: "Which language does Zama FHEVM support?", options: ["Python", "Solidity", "C++", "Rust"], answer: 1 },
+        { question: "What is the main benefit of FHE?", options: ["Speed", "Transparency", "Privacy", "Free usage"], answer: 2 },
+        { question: "Zama Protocol focuses on combining AI with?", options: ["Encryption", "Blockchain", "Metaverse", "Quantum computing"], answer: 0 },
+        { question: "Who can deploy private smart contracts using Zama?", options: ["Only developers", "Anyone", "Only institutions", "Miners"], answer: 1 },
+        { question: "What does FHEVM stand for?", options: ["Fully Homomorphic Encryption Virtual Machine", "Fast Hash Execution Virtual Model", "Functional Hybrid Execution Manager", "Full Homomorphic Engine for VMs"], answer: 0 },
+        { question: "Zama provides SDKs for?", options: ["Web apps", "Smart contracts", "AI and ML models", "Email services"], answer: 2 },
+        { question: "Zama’s mission is to make privacy?", options: ["Optional", "Default", "Complex", "Paid"], answer: 1 },
+        { question: "What is the role of the compiler in FHEVM?", options: ["To compress data", "To encrypt computations", "To translate Solidity to FHE bytecode", "To run FHE faster"], answer: 2 },
+        { question: "What makes Zama different from ZK technology?", options: ["It allows encrypted computation", "It’s slower", "It’s centralized", "It needs oracles"], answer: 0 },
+        { question: "FHE works directly on?", options: ["Decrypted data", "Encrypted data", "Raw memory", "Compressed files"], answer: 1 },
+        { question: "Zama Protocol aims to redefine?", options: ["AI transparency", "Web3 privacy", "Blockchain speed", "Smart contracts only"], answer: 1 }
+      ];
 
-    let current = 0, score = 0;
-    const qEl = document.getElementById("question");
-    const oEl = document.getElementById("options");
-    const pEl = document.getElementById("progress");
-    const sEl = document.getElementById("score");
+      let current = 0, score = 0;
+      const q = document.getElementById("question");
+      const opts = document.getElementById("options");
+      const next = document.getElementById("next-btn");
+      const result = document.getElementById("result");
+      const scoreEl = document.getElementById("score");
+      const quiz = document.getElementById("quiz");
 
-    function loadQuestion() {
-      const q = questions[current];
-      qEl.textContent = q.q;
-      oEl.innerHTML = "";
-      q.options.forEach((opt, i) => {
-        const btn = document.createElement("button");
-        btn.textContent = opt;
-        btn.onclick = () => handleAnswer(i);
-        oEl.appendChild(btn);
-      });
-      pEl.textContent = `Question ${current + 1} of ${questions.length}`;
-      sEl.textContent = "";
-    }
+      function loadQ() {
+        const data = quizData[current];
+        q.textContent = data.question;
+        opts.innerHTML = "";
+        data.options.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.className = "bg-gray-700 hover:bg-indigo-500 px-4 py-2 rounded-lg transition";
+          btn.textContent = opt;
+          btn.onclick = () => {
+            if (i === data.answer) score++;
+            next.style.display = "block";
+            opts.querySelectorAll("button").forEach(b => b.disabled = true);
+          };
+          opts.appendChild(btn);
+        });
+        next.style.display = "none";
+      }
 
-    function handleAnswer(i) {
-      if (i === questions[current].correct) score++;
-      current++;
-      if (current < questions.length) loadQuestion();
-      else showResult();
-    }
+      next.onclick = () => {
+        current++;
+        if (current < quizData.length) loadQ();
+        else showResult();
+      };
 
-    function showResult() {
-      qEl.textContent = "🎉 Quiz Completed!";
-      oEl.innerHTML = "";
-      sEl.textContent = `You scored ${score} out of ${questions.length}`;
-      const retry = document.createElement("button");
-      retry.textContent = "Retry Quiz";
-      retry.onclick = () => { current = 0; score = 0; sEl.textContent = ""; loadQuestion(); };
-      oEl.appendChild(retry);
-    }
+      function showResult() {
+        quiz.classList.add("hidden");
+        result.classList.remove("hidden");
+        scoreEl.textContent = `${score} / ${quizData.length}`;
+      }
 
-    loadQuestion();
-  </script>
-</body>
+      document.getElementById("retry-btn").onclick = () => {
+        score = 0;
+        current = 0;
+        result.classList.add("hidden");
+        quiz.classList.remove("hidden");
+        loadQ();
+      };
+
+      loadQ();
+    </script>
+  </body>
 </html>
