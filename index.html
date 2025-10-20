@@ -1,232 +1,332 @@
-"use client";
-import React, { useState, useEffect, useMemo } from "react";
-
-/*
-  Zama IQ Master Challenge - Next.js page
-  Drop into: /app/page.jsx
-  Uses Tailwind for styling (configured above).
-*/
-
-export default function Page() {
-  const questions = useMemo(() => [
-    // LEVEL 1 — Easy (1..5)
-    { q: "What does FHE stand for?", o:["Fast Homomorphic Encryption","Fully Homomorphic Encryption","Functionally Hidden Encryption","Finite Homomorphic Encoding"], a:1, pts:1 },
-    { q: "What is the main value Zama Protocol adds?", o:["Faster blocks","Confidential on-chain computation","Lower gas fees","Larger blocks"], a:1, pts:1 },
-    { q: "Which language is used to write Zama encrypted contracts?", o:["Rust","Solidity","Python","Go"], a:1, pts:1 },
-    { q: "Where does heavy FHE computation typically run?", o:["On-chain EVM","Off-chain coprocessors","User browser only","Layer-0"], a:1, pts:1 },
-    { q: "What is a Gateway in Zama architecture?", o:["A KMS node","An orchestrator that handles ciphertext flow","A wallet provider","A consensus miner"], a:1, pts:1 },
-
-    // LEVEL 2 — Intermediate (6..12)
-    { q: "Why use a threshold KMS for FHE keys?", o:["Speed up encryption","Avoid single point of decryption control","Lower gas costs","Simplify UI"], a:1, pts:2 },
-    { q: "What is a coprocessor role?", o:["Encrypt user keys","Perform and verify FHE computations off-chain","Store public chain state","Act as a wallet"], a:1, pts:2 },
-    { q: "Encrypted types in FHEVM (example) include:", o:["euint / eint / ebool", "priv_uint / priv_bool", "sint / sbytes", "sealint / sealtx"], a:0, pts:2 },
-    { q: "How does composability work with encrypted state?", o:["Encrypted contracts can't interoperate","Encrypted state can be mixed with public contracts via host contracts and gateways","Only one encrypted contract per chain","Composability is impossible"], a:1, pts:2 },
-    { q: "Which of these is a major trade-off of FHE on chain?", o:["Lower security","Higher latency and compute cost","No smart contract support","Impossible verification"], a:1, pts:2 },
-    { q: "What must clients do before sending encrypted inputs on-chain?", o:["Send plain text first","Encrypt locally using public keys managed by KMS","Ask the miner","Call an oracle"], a:1, pts:2 },
-    { q: "What does the Gateway NOT do?", o:["Coordinate coprocessors","Manage ciphertext flows","Directly execute heavy FHE on-chain","Validate encrypted inputs"], a:2, pts:2 },
-
-    // LEVEL 3 — Expert (13..20)
-    { q: "Which statement is true about coprocessor verification?", o:["Coprocessors never publish proofs","Coprocessors can produce verifiable receipts or logs that help on-chain verification","Verification is always on-chain and trivial","Coprocessors replace consensus"], a:1, pts:3 },
-    { q: "Why is MPC used with KMS in Zama?", o:["To speed up encryption operations","To split trust so no single party can decrypt ciphertexts alone","To provide cheap storage","To avoid using FHE"], a:1, pts:3 },
-    { q: "When bridging ciphertexts across host chains, a key risk is:", o:["Different gas tokens","Replay attacks and key mismanagement","Faster finality","Lack of smart contracts"], a:1, pts:3 },
-    { q: "Which design reduces on-chain gas for ciphertext ops?", o:["Storing full plaintext on-chain","Batching FHE operations and minimizing ciphertext size","Using 512-bit ciphertext as default","Running everything in EVM directly"], a:1, pts:3 },
-    { q: "In a private auction built with Zama, which property is preserved?", o:["Bid amounts visible to all","Bidders identities and amounts remain encrypted until reveal phase","No one can verify winner","Bids are stored in plain logs"], a:1, pts:3 },
-    { q: "Which is a correct security assumption for Zama’s KMS?", o:["Single operator controls keys","Threshold of independent parties must collude to decrypt","Anyone can decrypt if they pay gas","Keys are public"], a:1, pts:3 },
-    { q: "Which verification approach helps ensure coprocessor honesty?", o:["On-chain universal reencryption","Off-chain witness generation (verifiable logs) plus on-chain checks","No verification is needed","Only trusting a single operator"], a:1, pts:3 },
-    { q: "A correct end-to-end flow for an encrypted computation looks like:", o:["User encrypts → gateway sends to coprocessor → coprocessor computes and returns ciphertext/receipt → result posted on-chain and client decrypts using KMS cooperation","User posts plaintext → coprocessor encrypts → miner decrypts","KMS alone computes everything without coprocessor","User sends raw private key on-chain"], a:0, pts:3 }
-  ], []);
-
-  const totalQuestions = questions.length;
-  const [idx, setIdx] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [finished, setFinished] = useState(false);
-  const [points, setPoints] = useState(0);
-
-  useEffect(() => setSelected(null), [idx]);
-
-  function choose(i) {
-    if (selected !== null) return;
-    setSelected(i);
-    if (i === questions[idx].a) {
-      setScore(s => s + 1);
-      setPoints(p => p + questions[idx].pts);
-    }
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Zama Protocol IQ Master Challenge</title>
+<meta name="description" content="Zama Protocol IQ Master Challenge — 20 questions from basic to expert on FHE and Zama architecture." />
+<link rel="icon" href="data:," />
+<style>
+  :root{
+    --zama-yellow:#FFD700;
+    --bg-dark:#070707;
+    --card: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,215,0,0.08);
+    --text-muted:#9aa4b2;
   }
-
-  function next() {
-    if (idx + 1 < totalQuestions) setIdx(idx + 1);
-    else setFinished(true);
+  html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{background:radial-gradient(ellipse at 10% 10%, rgba(255,215,0,0.02), transparent 10%), linear-gradient(180deg, #000 0%, #04060a 100%); color:#fff; display:flex; align-items:center; justify-content:center; padding:28px;}
+  .wrap{width:100%;max-width:980px; position:relative; z-index:2;}
+  .card{background:var(--card); border:1px solid var(--glass-border); border-radius:20px; padding:28px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); backdrop-filter: blur(6px);}
+  header{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand img{width:56px;height:56px;border-radius:8px;object-fit:cover;}
+  h1{margin:0;font-size:20px;color:var(--zama-yellow);font-weight:800;letter-spacing:0.2px;}
+  p.lead{margin:4px 0 0 0;color:var(--text-muted);font-size:13px;}
+  .qcount{color:var(--text-muted); font-size:13px;}
+  .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:999px;margin:18px 0;overflow:hidden;}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--zama-yellow),#ffd94d); width:0%; transition:width .4s ease;}
+  main .question{font-size:18px;margin:14px 0 18px 0; color:#e6eef7;}
+  .options{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  .opt{background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:999px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:all .18s ease; text-align:left;}
+  .opt:hover{transform:translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.45); border-color: rgba(255,215,0,0.18);}
+  .opt .bullet{width:20px;height:20px;border-radius:50%; border:2px solid var(--zama-yellow); flex-shrink:0; display:inline-block;}
+  .opt.disabled{opacity:.55; pointer-events:none;}
+  .footer-row{display:flex; align-items:center; justify-content:space-between; margin-top:18px;}
+  .btn{background:var(--zama-yellow); color:#000; padding:10px 16px; border-radius:999px; font-weight:700; border:none; cursor:pointer; box-shadow: 0 10px 30px rgba(255,215,0,0.06); transition:transform .12s ease;}
+  .btn:active{transform:translateY(2px);}
+  .muted{color:var(--text-muted); font-size:13px;}
+  /* result */
+  .result{display:flex; gap:28px; align-items:center; justify-content:center; flex-direction:column; padding:10px;}
+  .gauge-wrap{position:relative; width:220px; height:220px;}
+  svg {display:block;}
+  .gauge-center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;}
+  .iq-num{font-size:36px; font-weight:800; color:#000; background:linear-gradient(90deg,#fff8d6,#ffd700); padding:8px 18px; border-radius:999px; box-shadow: 0 8px 20px rgba(0,0,0,0.35);}
+  .iq-sub{color:#222; font-weight:700; margin-top:6px; font-size:12px;}
+  .rank-badge{padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:999px; color:var(--zama-yellow); font-weight:700;}
+  .share-row{display:flex; gap:10px; align-items:center;}
+  .share{background:#1D9BF0; color:white; padding:10px 14px; border-radius:999px; font-weight:700; border:none; cursor:pointer;}
+  .playagain{background:rgba(255,255,255,0.06); color:white; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.03); cursor:pointer;}
+  footer{margin-top:12px; text-align:center; color:var(--text-muted); font-size:13px;}
+  /* watermark behind card */
+  .watermark{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:0; opacity:0.06; filter: blur(6px);}
+  .watermark img{width:420px;height:420px;object-fit:contain; transform:rotate(-6deg);}
+  /* particle background */
+  .particles{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+  .particle{position:absolute;border-radius:50%; filter: blur(20px); opacity:.6; mix-blend-mode:screen;}
+  /* small responsive */
+  @media (max-width:720px){
+    .options{grid-template-columns:1fr; }
+    .brand img{width:42px;height:42px;}
+    .watermark img{width:320px;height:320px;}
+    .gauge-wrap{width:180px;height:180px;}
+    .iq-num{font-size:30px;}
   }
+</style>
+</head>
+<body>
+  <!-- animated particles -->
+  <div class="particles" aria-hidden="true">
+    <div class="particle" style="width:260px;height:260px;left:6%;top:6%;background:radial-gradient(circle,#ffd70033,#ffd70000);animation:move 18s linear infinite;"></div>
+    <div class="particle" style="width:180px;height:180px;left:72%;top:4%;background:radial-gradient(circle,#ffd70022,#ffd70000);animation:move 14s linear infinite;"></div>
+    <div class="particle" style="width:220px;height:220px;left:42%;top:66%;background:radial-gradient(circle,#ffd7001a,#ffd70000);animation:move 20s linear infinite;"></div>
+  </div>
 
-  function restart() {
-    setIdx(0); setScore(0); setSelected(null); setFinished(false); setPoints(0);
-  }
+  <div class="wrap">
+    <div class="watermark"><img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="Zama logo" /></div>
 
-  // compute IQ mapping: map earned points to an IQ-like scale
-  // total possible points:
-  const totalPoints = questions.reduce((s,q) => s + q.pts, 0);
-  const pct = Math.round((points / totalPoints) * 100);
-  const iq = Math.round((points / totalPoints) * 100 * 1.0 + 60); // 60..160 mapping
+    <div class="card" role="main" aria-labelledby="title">
+      <header>
+        <div class="brand">
+          <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="Zama logo" />
+          <div>
+            <h1 id="title">Zama Protocol IQ Master Challenge</h1>
+            <p class="lead">20 questions — basics → expert. Pro mode: learn & prove your FHE knowledge.</p>
+          </div>
+        </div>
+        <div class="qcount">20 Q</div>
+      </header>
 
-  // rank
-  let rankLabel = "Zama Explorer";
-  if (points >= Math.round(totalPoints * 0.8)) rankLabel = "Zama Mastermind";
-  else if (points >= Math.round(totalPoints * 0.5)) rankLabel = "FHE Apprentice";
+      <div class="progress" aria-hidden="true"><i id="prog" style="width:0%"></i></div>
 
-  // helper: describeArc for SVG path (for the orb arc)
-  function polarToCartesian(cx, cy, r, angle) {
-    const a = (angle - 90) * Math.PI / 180.0;
-    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
-  }
-  function describeArc(cx, cy, r, startAngle, endAngle) {
-    if (endAngle <= startAngle) return "";
-    const start = polarToCartesian(cx, cy, r, endAngle);
-    const end = polarToCartesian(cx, cy, r, startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-  }
+      <main id="main">
+        <div id="quiz">
+          <div class="question" id="question">Question text</div>
+          <div class="options" id="options"></div>
 
-  // share text
-  const shareMsg = encodeURIComponent(`I just scored ${iq} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
-
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-[#050506] to-[#071018] flex items-center justify-center p-6">
-      <div className="relative max-w-3xl w-full">
-        {/* Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-6 z-0">
-          <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-64 h-64 object-contain transform -rotate-6" />
+          <div class="footer-row">
+            <div class="muted" id="qmeta">Difficulty: —</div>
+            <div>
+              <button class="btn" id="nextBtn" disabled>Next</button>
+            </div>
+          </div>
         </div>
 
-        <div className="relative bg-[rgba(255,255,255,0.03)] border border-[rgba(255,215,0,0.06)] rounded-3xl p-8 shadow-2xl z-10 backdrop-blur-sm">
-          <header className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-10 h-10 object-contain rounded-md" />
-              <div>
-                <h1 className="text-2xl font-extrabold text-[var(--zama-yellow,#FFD700)]">Zama Protocol IQ Master Challenge</h1>
-                <p className="text-sm text-gray-300">From basics to expert — test real understanding of FHE & Zama architecture.</p>
-              </div>
+        <div id="result" style="display:none" class="result" aria-hidden="true">
+          <div class="gauge-wrap" id="gwrap">
+            <!-- SVG gauge rendered by JS -->
+            <svg id="gauge" width="220" height="220" viewBox="0 0 120 120" aria-hidden="true"></svg>
+            <div class="gauge-center">
+              <div class="iq-num" id="iqNum">120</div>
+              <div class="iq-sub" id="iqPct">80%</div>
             </div>
-            <div className="text-xs text-gray-400">Q: <strong>{totalQuestions}</strong></div>
-          </header>
-
-          <div className="h-2 w-full bg-white/5 rounded-full mb-6 overflow-hidden">
-            <div className="h-full bg-[var(--zama-yellow,#FFD700)] transition-all" style={{ width: `${(idx / totalQuestions) * 100}%` }} />
           </div>
 
-          {!finished ? (
-            <section>
-              <div className="mb-6">
-                <div className="text-sm text-gray-300 mb-2">Question <strong>{idx + 1}</strong> / {totalQuestions}</div>
-                <h2 className="text-lg font-semibold text-white">{questions[idx].q}</h2>
-              </div>
+          <div id="resultText" style="text-align:center;">
+            <div style="margin-top:6px;color:#dce6ef">You answered <strong id="correctCount">0</strong> / 20 correctly.</div>
+            <div style="margin-top:6px;"><span class="rank-badge" id="rankLabel">Zama Explorer</span></div>
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {questions[idx].o.map((opt, i) => {
-                  const correct = i === questions[idx].a;
-                  const chosen = selected === i;
-                  const base = "flex items-center gap-3 justify-center p-4 rounded-full border transition-all duration-200 text-sm font-medium";
-                  const classes = chosen
-                    ? correct
-                      ? base + " bg-[var(--zama-yellow,#FFD700)] text-black border-transparent shadow-md"
-                      : base + " bg-white/6 text-gray-300 opacity-60 border-transparent line-through"
-                    : base + " bg-white/2 text-gray-200 hover:bg-white/5 cursor-pointer";
-
-                  return (
-                    <button key={i} className={classes} onClick={() => choose(i)} disabled={selected !== null}>
-                      <span className="w-5 h-5 flex items-center justify-center rounded-full border border-[var(--zama-yellow,#FFD700)] mr-2" />
-                      <span className="truncate">{opt}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center justify-between mt-6">
-                <div className="text-sm text-gray-300">Difficulty points: <strong>{questions[idx].pts}</strong></div>
-                <button
-                  onClick={next}
-                  disabled={selected === null}
-                  className={`px-5 py-2 rounded-full font-semibold ${selected === null ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-[var(--zama-yellow,#FFD700)] text-black shadow"}`}
-                >
-                  {idx + 1 < totalQuestions ? "Next" : "Finish"}
-                </button>
-              </div>
-            </section>
-          ) : (
-            <section className="space-y-6">
-              <div className="flex items-center justify-center flex-col">
-                {/* Data Orb visual (unique) */}
-                <div className="relative w-56 h-56 flex items-center justify-center">
-                  <svg width="220" height="220" viewBox="0 0 120 120" className="drop-shadow-2xl">
-                    <defs>
-                      <radialGradient id="g1" cx="50%" cy="30%">
-                        <stop offset="0%" stopColor="#fff8d6" />
-                        <stop offset="60%" stopColor="#fff1a8" />
-                        <stop offset="100%" stopColor="#ffd700" />
-                      </radialGradient>
-                      <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#fff8d6" />
-                        <stop offset="100%" stopColor="#ffd700" />
-                      </linearGradient>
-                      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-                        <feMerge>
-                          <feMergeNode in="coloredBlur" />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </filter>
-                    </defs>
-
-                    {/* base orb */}
-                    <circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.16" />
-
-                    {/* decorative outer rings */}
-                    <circle cx="60" cy="60" r="44" stroke="rgba(255,215,0,0.06)" strokeWidth="1" fill="none" />
-                    <circle cx="60" cy="60" r="50" stroke="rgba(255,215,0,0.03)" strokeWidth="2" fill="none" />
-
-                    {/* arc gauge */}
-                    <path d={describeArc(60, 60, 36, -120, -120 + (pct/100)*240)} fill="none" stroke="url(#arc)" strokeWidth="6" strokeLinecap="round" filter="url(#glow)" />
-
-                    {/* inner micro ring */}
-                    <circle cx="60" cy="60" r="20" fill="rgba(255,255,255,0.02)" />
-                  </svg>
-
-                  <div className="absolute text-center">
-                    <div className="text-3xl font-extrabold text-black" style={{ textShadow: "0 2px 20px rgba(255,215,0,0.12)" }}>{iq}</div>
-                    <div className="text-xs text-gray-800">Zama IQ</div>
-                    <div className="text-sm mt-1 text-gray-700">{pct}%</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 text-gray-200">You scored <strong>{points}</strong> points (out of {totalPoints}).</div>
-                <div className="mt-1 text-yellow-300 font-semibold">{rankLabel}</div>
-              </div>
-
-              <div className="flex items-center justify-center gap-4">
-                <a href={`https://twitter.com/intent/tweet?text=${shareMsg}`} target="_blank" rel="noreferrer">
-                  <button className="px-5 py-2 rounded-full bg-[var(--zama-yellow,#FFD700)] text-black font-semibold shadow">Share on X</button>
-                </a>
-                <button onClick={restart} className="px-5 py-2 rounded-full bg-white/6 text-white hover:bg-white/8">Play again</button>
-              </div>
-
-              <div className="mt-3 text-xs text-gray-400">Developed with 💛 by Zunnoorayn</div>
-            </section>
-          )}
+          <div style="margin-top:14px;" class="share-row">
+            <button class="share" id="shareBtn">Share on X</button>
+            <button class="playagain" id="retryBtn">Play again</button>
+          </div>
         </div>
-      </div>
-    </main>
-  );
+      </main>
+
+      <footer>
+        Developed with 💛 by <strong>Zunnoorayn</strong>
+      </footer>
+    </div>
+  </div>
+
+<script>
+/* Questions: 20 educational/pro (easy -> expert). Each has pts for weighting. */
+const QUESTIONS = [
+  // Level 1 (easy) 1pt
+  {q:"What does FHE stand for?", o:["Fast Homomorphic Encryption","Fully Homomorphic Encryption","Functional Hidden Encryption","Finite Homomorphic Encoding"], a:1, pts:1},
+  {q:"What primary problem does Zama Protocol address?", o:["Faster block finality","Confidential on-chain computation","Lower gas costs","Cross-chain swaps"], a:1, pts:1},
+  {q:"Which language is used to write encrypted contracts on Zama FHEVM?", o:["Rust","Solidity","Python","Go"], a:1, pts:1},
+  {q:"Where should user data be encrypted before sending to the chain?", o:["Encrypt locally client-side","Send plaintext then encrypt on-chain","No encryption needed","Upload to IPFS first"], a:0, pts:1},
+  {q:"Which component coordinates ciphertext flow and coprocessors?", o:["Miner","Gateway","Wallet","Explorer"], a:1, pts:1},
+
+  // Level 2 (intermediate) 2pts
+  {q:"Why use threshold KMS with FHE keys?", o:["Make encryption faster","Prevent any single party from decrypting alone","Lower gas fees","Simplify frontend"], a:1, pts:2},
+  {q:"What is the main job of a coprocessor in Zama architecture?", o:["Mine blocks","Run and verify heavy FHE computations off-chain","Host wallets","Serve web pages"], a:1, pts:2},
+  {q:"Which encrypted Solidity types are representative in FHEVM?", o:["euint, eint, ebool, ebytes","privuint, secretint, lockbool","sealed_uint, sealed_bool","crypt_uint, crypt_bool"], a:0, pts:2},
+  {q:"How can encrypted contracts remain composable with public contracts?", o:["They can't","Through host contracts & gateways that bridge ciphertext interactions","By revealing plaintext to other contracts","Only via off-chain calls"], a:1, pts:2},
+  {q:"What practical trade-off does FHE introduce?", o:["Lower security","Higher compute cost and latency","Impossible to verify results","Unlimited scalability"], a:1, pts:2},
+  {q:"Before sending ciphertexts, clients typically need what from KMS?", o:["Decryption keys","Public encryption parameters or key material for encryption","Gas tokens","Proof-of-work"], a:1, pts:2},
+  {q:"Which action reduces on-chain gas for FHE operations?", o:["Using full 4096-bit ciphertexts everywhere","Batching ciphertext operations and minimizing ciphertext size","Decrypting everything on-chain","Storing plaintext on IPFS"], a:1, pts:2},
+
+  // Level 3 (expert) 3pts
+  {q:"Which verification method strengthens trust in coprocessors' outputs?", o:["No verification","Off-chain verifiable receipts + on-chain checks","Trust-only model","Single-signer attestations only"], a:1, pts:3},
+  {q:"Why does Zama use MPC for key management?", o:["To store keys cheaply","To split trust so no single operator can decrypt","To accelerate consensus","To eliminate coprocessors"], a:1, pts:3},
+  {q:"What risk should be addressed when bridging ciphertexts between host chains?", o:["Different gas tokens","Replay, key mismatch, and routing attacks","Short block times","Storage limits"], a:1, pts:3},
+  {q:"In a confidential auction built using Zama, which property holds?", o:["Bids are public immediately","Bid amounts remain encrypted until reveal or claim","Winner cannot be verified","All bids are decrypted to everyone"], a:1, pts:3},
+  {q:"Which design helps make FHE practical in production?", o:["Do all work on-chain","Offload heavy computation to coprocessors and verify succinctly on-chain","Require users to decrypt on-chain","Use very large ciphertexts always"], a:1, pts:3},
+  {q:"Which statement about KMS security assumptions is correct?", o:["Single operator controls keys","A threshold of independent parties must collude to decrypt","Keys are stored publicly","KMS replaces encryption entirely"], a:1, pts:3},
+  {q:"An end-to-end encrypted compute flow typically is:", o:["User encrypts → Gateway routes → Coprocessor computes + returns ciphertext/receipt → On-chain result recorded → Client decrypts via KMS cooperation","User sends plaintext → Coprocessor encrypts → Miner validates","KMS does everything without coprocessor","User posts raw keys on-chain"], a:0, pts:3},
+  {q:"What is a practical optimization for ciphertext costs?", o:["Always use 256-bit plaintext slots","Pack multiple small values into single ciphertexts and minimize rounds","Prefer one-by-one operations","Avoid batching"], a:1, pts:3}
+];
+
+let index = 0;
+let score = 0;
+let points = 0;
+let selected = null;
+
+const totalQ = QUESTIONS.length;
+const totalPts = QUESTIONS.reduce((s,q)=>s+q.pts,0);
+
+/* UI elements */
+const qEl = document.getElementById('question');
+const optsEl = document.getElementById('options');
+const progEl = document.getElementById('prog');
+const qmeta = document.getElementById('qmeta');
+const nextBtn = document.getElementById('nextBtn');
+const resultBox = document.getElementById('result');
+const quizBox = document.getElementById('quiz');
+const gaugeSVG = document.getElementById('gauge');
+const iqNum = document.getElementById('iqNum');
+const iqPct = document.getElementById('iqPct');
+const correctCountEl = document.getElementById('correctCount');
+const rankLabelEl = document.getElementById('rankLabel');
+const shareBtn = document.getElementById('shareBtn');
+const retryBtn = document.getElementById('retryBtn');
+
+function renderQuestion(){
+  selected = null;
+  nextBtn.disabled = true;
+  nextBtn.innerText = (index+1 < totalQ) ? 'Next' : 'Finish';
+  const item = QUESTIONS[index];
+  qEl.textContent = item.q;
+  optsEl.innerHTML = '';
+  qmeta.textContent = `Difficulty points: ${item.pts}`;
+  QUESTIONS[index].o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="bullet" aria-hidden="true"></span><span style="flex:1">${opt}</span>`;
+    btn.onclick = () => {
+      // lock selection
+      if (selected !== null) return;
+      selected = i;
+      // disable all options visually
+      Array.from(optsEl.children).forEach((c, idx) => {
+        c.classList.add('disabled');
+        if (idx === i) c.classList.remove('disabled');
+      });
+      // check correctness
+      if (i === item.a) {
+        score++;
+        points += item.pts;
+        // mark chosen as correct style
+        optsEl.children[i].style.background = 'linear-gradient(90deg,#fff6d6,#ffd700)';
+        optsEl.children[i].style.color = '#000';
+      } else {
+        optsEl.children[i].style.opacity = '0.6';
+      }
+      nextBtn.disabled = false;
+      // update progress small
+    };
+    optsEl.appendChild(btn);
+  });
+  const percent = Math.round((index/totalQ)*100);
+  progEl.style.width = percent + '%';
 }
 
-// SVG arc helper (same math used above)
-function polarToCartesian(cx, cy, r, angle) {
-  const a = (angle - 90) * Math.PI / 180.0;
-  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+nextBtn.addEventListener('click', ()=>{
+  if (selected === null) return;
+  if (index+1 < totalQ){
+    index++;
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    finishQuiz();
+  }
+});
+
+function finishQuiz(){
+  quizBox.style.display = 'none';
+  resultBox.style.display = 'flex';
+  const pct = Math.round((points/totalPts)*100);
+  const iq = Math.round((points/totalPts)*100 + 60); // map to 60..160
+  iqNum.innerText = iq;
+  iqPct.innerText = pct + '%';
+  correctCountEl.innerText = score;
+  // rank
+  let rank = 'Zama Explorer';
+  if (points >= Math.round(totalPts*0.8)) rank = 'Zama Mastermind';
+  else if (points >= Math.round(totalPts*0.5)) rank = 'FHE Apprentice';
+  rankLabelEl.innerText = rank;
+
+  // render gauge (speedometer arc)
+  renderGauge(pct);
 }
-function describeArc(cx, cy, r, startAngle, endAngle) {
-  if (endAngle <= startAngle) return "";
-  const start = polarToCartesian(cx, cy, r, endAngle);
-  const end = polarToCartesian(cx, cy, r, startAngle);
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+function renderGauge(pct){
+  // render semicircular arc from -120deg to 120deg (240deg sweep)
+  const start = -120;
+  const sweep = 240 * (pct/100);
+  // draw background arc
+  const bg = `<path d="${describeArc(60,60,36,start, start+240)}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" stroke-linecap="round"/>`;
+  // foreground arc
+  const fg = `<path d="${describeArc(60,60,36,start, start+sweep)}" fill="none" stroke="url(#arc)" stroke-width="6" stroke-linecap="round"/>`;
+  const defs = `
+    <defs>
+      <radialGradient id="g1" cx="50%" cy="30%">
+        <stop offset="0%" stop-color="#fff8d6"/>
+        <stop offset="60%" stop-color="#fff1a8"/>
+        <stop offset="100%" stop-color="${getComputedStyle(document.documentElement).getPropertyValue('--zama-yellow') || '#FFD700'}"/>
+      </radialGradient>
+      <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#fff8d6"/>
+        <stop offset="100%" stop-color="${getComputedStyle(document.documentElement).getPropertyValue('--zama-yellow') || '#FFD700'}"/>
+      </linearGradient>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>`;
+  const inner = `<circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.12" />`;
+  gaugeSVG.innerHTML = defs + bg + fg + inner;
+  // animate stroke-dashoffset - we'll create a temporary animation by cloning path and staggering opacity
+  // (SVG path draws are immediate; to fake a smooth fill, rely on CSS transition using stroke-dasharray if needed)
+  // For simplicity we leave it static; the arc itself represents the pct visually.
+}
+
+/* helper: translate arc */
+function polarToCartesian(cx, cy, r, angle){
+  const a = (angle - 90) * Math.PI / 180.0;
+  return {x: cx + r * Math.cos(a), y: cy + r * Math.sin(a)};
+}
+function describeArc(cx, cy, r, startAngle, endAngle){
+  if (endAngle <= startAngle) return '';
+  const start = polarToCartesian(cx,cy,r,endAngle);
+  const end = polarToCartesian(cx,cy,r,startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
 }
+
+/* share button */
+shareBtn.addEventListener('click', ()=>{
+  const text = encodeURIComponent(`${iqNum.innerText} IQ — I just scored ${iqNum.innerText} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
+  const url = `https://twitter.com/intent/tweet?text=${text}`;
+  window.open(url,'_blank');
+});
+
+/* retry */
+retryBtn.addEventListener('click', ()=>{
+  index = 0; score = 0; points = 0; selected = null;
+  quizBox.style.display = ''; resultBox.style.display = 'none';
+  renderQuestion();
+  progEl.style.width = '0%';
+});
+
+/* initial render */
+renderQuestion();
+
+/* particle motion */
+(function animateParticles(){
+  const parts = document.querySelectorAll('.particle');
+  parts.forEach((p, i)=>{
+    const dur = 14 + (i*4);
+    p.animate([
+      { transform: 'translateY(0) translateX(0) scale(1)' },
+      { transform: 'translateY(-36px) translateX(20px) scale(1.06)' },
+      { transform: 'translateY(0) translateX(0) scale(1)' }
+    ], { duration: dur*1000, iterations: Infinity, delay: i*400 });
+  });
+})();
+</script>
+</body>
+</html>
