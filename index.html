@@ -3,41 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zama Protocol Quiz</title>
+    <title>Zama IQ Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              zamaYellow: "#FFD700",
+              zamaDark: "#0A0A0A",
+              zamaGray: "#1E1E1E",
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen flex items-center justify-center">
-    <div class="max-w-md w-full bg-gray-800 p-8 rounded-2xl shadow-xl text-center">
-      <h1 class="text-3xl font-bold mb-6 text-indigo-400">Zama Protocol Quiz</h1>
+
+  <body class="bg-gradient-to-br from-zamaDark via-zamaGray to-black min-h-screen flex items-center justify-center text-white font-sans">
+    <div class="max-w-md w-full bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl text-center relative">
+      <h1 class="text-3xl font-extrabold mb-4 text-zamaYellow tracking-wide">Zama IQ Challenge ⚡</h1>
+      <p class="text-sm text-gray-400 mb-6">Test your understanding of FHE & Privacy!</p>
+
+      <div id="progress" class="h-2 w-full bg-gray-700 rounded-full mb-6 overflow-hidden">
+        <div id="progress-bar" class="h-full bg-zamaYellow transition-all duration-300" style="width: 0%"></div>
+      </div>
+
       <div id="quiz">
-        <p id="question" class="text-lg mb-4 font-medium"></p>
-        <div id="options" class="flex flex-col gap-3"></div>
-        <button id="next-btn" class="mt-6 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition">Next</button>
+        <p id="question" class="text-lg font-medium mb-6"></p>
+        <div id="options" class="grid grid-cols-2 gap-3"></div>
+        <button id="next-btn" class="mt-8 bg-zamaYellow text-black hover:bg-yellow-400 font-bold px-5 py-2 rounded-full transition hidden">Next</button>
       </div>
+
       <div id="result" class="hidden">
-        <h2 class="text-2xl font-bold mb-4 text-green-400">Your Score</h2>
+        <h2 class="text-2xl font-bold mb-4 text-zamaYellow">🎯 Your Zama IQ</h2>
         <p id="score" class="text-lg mb-6"></p>
-        <button id="retry-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg">Try Again</button>
+        <div id="badge" class="inline-block bg-zamaYellow text-black px-4 py-2 rounded-full mb-4 shadow-lg font-bold"></div>
+        <div class="flex justify-center gap-4">
+          <button id="retry-btn" class="bg-zamaGray px-4 py-2 rounded-full hover:bg-zamaYellow hover:text-black transition">Try Again</button>
+          <button id="share-btn" class="bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition">Share on X</button>
+        </div>
       </div>
+
+      <footer class="mt-8 text-xs text-gray-500">
+        © 2025 Built with 💛 by a Zama Believer
+      </footer>
     </div>
 
     <script>
       const quizData = [
-        { question: "What technology is Zama based on?", options: ["Blockchain", "Fully Homomorphic Encryption", "AI", "ZK Proofs"], answer: 1 },
-        { question: "What does FHE stand for?", options: ["Full Hash Encoding", "Fast Homomorphic Encryption", "Fully Homomorphic Encryption", "Functional Hash Engine"], answer: 2 },
-        { question: "Zama's main focus is on?", options: ["DeFi", "Privacy in computation", "NFTs", "Gaming"], answer: 1 },
-        { question: "What does the FHEVM enable?", options: ["Computing on encrypted data", "Faster mining", "Data deletion", "Smart contract compression"], answer: 0 },
-        { question: "Which language does Zama FHEVM support?", options: ["Python", "Solidity", "C++", "Rust"], answer: 1 },
-        { question: "What is the main benefit of FHE?", options: ["Speed", "Transparency", "Privacy", "Free usage"], answer: 2 },
-        { question: "Zama Protocol focuses on combining AI with?", options: ["Encryption", "Blockchain", "Metaverse", "Quantum computing"], answer: 0 },
-        { question: "Who can deploy private smart contracts using Zama?", options: ["Only developers", "Anyone", "Only institutions", "Miners"], answer: 1 },
-        { question: "What does FHEVM stand for?", options: ["Fully Homomorphic Encryption Virtual Machine", "Fast Hash Execution Virtual Model", "Functional Hybrid Execution Manager", "Full Homomorphic Engine for VMs"], answer: 0 },
-        { question: "Zama provides SDKs for?", options: ["Web apps", "Smart contracts", "AI and ML models", "Email services"], answer: 2 },
-        { question: "Zama’s mission is to make privacy?", options: ["Optional", "Default", "Complex", "Paid"], answer: 1 },
-        { question: "What is the role of the compiler in FHEVM?", options: ["To compress data", "To encrypt computations", "To translate Solidity to FHE bytecode", "To run FHE faster"], answer: 2 },
-        { question: "What makes Zama different from ZK technology?", options: ["It allows encrypted computation", "It’s slower", "It’s centralized", "It needs oracles"], answer: 0 },
-        { question: "FHE works directly on?", options: ["Decrypted data", "Encrypted data", "Raw memory", "Compressed files"], answer: 1 },
-        { question: "Zama Protocol aims to redefine?", options: ["AI transparency", "Web3 privacy", "Blockchain speed", "Smart contracts only"], answer: 1 }
+        { q: "What technology powers Zama?", o: ["Zero-Knowledge Proofs", "FHE", "AI", "Layer 2s"], a: 1 },
+        { q: "FHE allows computation on?", o: ["Plain data", "Encrypted data", "Hash data", "Random keys"], a: 1 },
+        { q: "Zama FHEVM extends which language?", o: ["Solidity", "Python", "Rust", "C++"], a: 0 },
+        { q: "Zama’s mission is to make privacy?", o: ["Paid", "Optional", "Default", "Hidden"], a: 2 },
+        { q: "FHEVM stands for?", o: ["Fully Homomorphic Encryption Virtual Machine", "Fast Hash Executor VM", "Full Hyper Engine", "Functional Hybrid Engine"], a: 0 },
+        { q: "FHE is mostly about?", o: ["Speed", "Privacy", "Transparency", "Scalability"], a: 1 },
+        { q: "Zama helps run?", o: ["Private smart contracts", "Public ledgers", "AI bots", "Wallets"], a: 0 },
+        { q: "FHE computations are done on?", o: ["Decrypted data", "Encrypted data", "Plain bytes", "Metadata"], a: 1 },
+        { q: "Zama SDKs support which areas?", o: ["AI & Blockchain", "Web2 apps", "Cloud storage", "Streaming"], a: 0 },
+        { q: "Zama Protocol is redefining?", o: ["Blockchain speed", "Web3 privacy", "Crypto trading", "File storage"], a: 1 },
       ];
 
       let current = 0, score = 0;
@@ -45,25 +69,33 @@
       const opts = document.getElementById("options");
       const next = document.getElementById("next-btn");
       const result = document.getElementById("result");
-      const scoreEl = document.getElementById("score");
       const quiz = document.getElementById("quiz");
+      const scoreEl = document.getElementById("score");
+      const progress = document.getElementById("progress-bar");
+      const badge = document.getElementById("badge");
 
       function loadQ() {
         const data = quizData[current];
-        q.textContent = data.question;
+        q.textContent = data.q;
         opts.innerHTML = "";
-        data.options.forEach((opt, i) => {
+        data.o.forEach((opt, i) => {
           const btn = document.createElement("button");
-          btn.className = "bg-gray-700 hover:bg-indigo-500 px-4 py-2 rounded-lg transition";
-          btn.textContent = opt;
+          btn.className =
+            "border border-zamaYellow/40 hover:bg-zamaYellow/20 transition rounded-full py-3 px-2 text-sm flex items-center justify-center gap-2";
+          btn.innerHTML = `<div class='w-5 h-5 border-2 border-zamaYellow rounded-full'></div><span>${opt}</span>`;
           btn.onclick = () => {
-            if (i === data.answer) score++;
+            if (i === data.a) score++;
             next.style.display = "block";
-            opts.querySelectorAll("button").forEach(b => b.disabled = true);
+            opts.querySelectorAll("button").forEach((b, idx) => {
+              b.disabled = true;
+              if (idx === data.a) b.classList.add("bg-zamaYellow", "text-black");
+              else b.classList.add("opacity-40");
+            });
           };
           opts.appendChild(btn);
         });
         next.style.display = "none";
+        progress.style.width = `${(current / quizData.length) * 100}%`;
       }
 
       next.onclick = () => {
@@ -75,15 +107,25 @@
       function showResult() {
         quiz.classList.add("hidden");
         result.classList.remove("hidden");
-        scoreEl.textContent = `${score} / ${quizData.length}`;
+        const iq = Math.round((score / quizData.length) * 150 + 50);
+        scoreEl.textContent = `You scored ${score}/${quizData.length}.`;
+        badge.textContent = `⚡ Zama IQ: ${iq}`;
+        progress.style.width = "100%";
       }
 
       document.getElementById("retry-btn").onclick = () => {
-        score = 0;
-        current = 0;
+        score = 0; current = 0;
         result.classList.add("hidden");
         quiz.classList.remove("hidden");
         loadQ();
+      };
+
+      document.getElementById("share-btn").onclick = () => {
+        const iq = badge.textContent.replace("⚡ Zama IQ: ", "");
+        const tweet = encodeURIComponent(`I just scored a Zama IQ of ${iq}! ⚡  
+Take the Zama Quiz and test your FHE knowledge!  
+#Zama #FHE #Web3Privacy`);
+        window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
       };
 
       loadQ();
