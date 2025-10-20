@@ -1,107 +1,232 @@
-{
-  "quizTitle": "Zama_FHE Quiz",
-  "developer": "Zunnoorayn",
-  "themeColor": "yellow",
-  "questions": [
-    {
-      "question": "What does FHE stand for in Zama_FHE?",
-      "options": ["Fully Hidden Encryption", "Fully Homomorphic Encryption", "Fast High Encryption", "Functional Hash Encoding"],
-      "answer": 1
-    },
-    {
-      "question": "What is the main purpose of Zama_FHE?",
-      "options": ["Speed up crypto transactions", "Enable computations on encrypted data", "Create NFTs", "Store files in the cloud"],
-      "answer": 1
-    },
-    {
-      "question": "Which programming language does Zama_FHE primarily support?",
-      "options": ["Python", "C++", "Solidity", "Rust"],
-      "answer": 2
-    },
-    {
-      "question": "Zama_FHE allows computations on:",
-      "options": ["Plain text only", "Encrypted data", "Images only", "Tokens only"],
-      "answer": 1
-    },
-    {
-      "question": "Which layer does Zama_FHE aim to improve in Web3?",
-      "options": ["Storage layer", "Consensus layer", "Privacy layer", "Transaction fee layer"],
-      "answer": 2
-    },
-    {
-      "question": "FHE in Zama helps users to:",
-      "options": ["Hide their private keys", "Perform calculations without decrypting data", "Send tokens faster", "Mine coins"],
-      "answer": 1
-    },
-    {
-      "question": "Zama_FHE is considered similar to HTTPS in what way?",
-      "options": ["It speeds up websites", "It encrypts and protects data", "It reduces gas fees", "It provides NFTs"],
-      "answer": 1
-    },
-    {
-      "question": "Which sector benefits the most from Zama_FHE?",
-      "options": ["Social media", "Data privacy and AI", "Gaming", "Marketing"],
-      "answer": 1
-    },
-    {
-      "question": "Zama_FHE computations on encrypted data are:",
-      "options": ["Only approximate", "Fully functional without decryption", "Only for testing", "Limited to small numbers"],
-      "answer": 1
-    },
-    {
-      "question": "What makes Zama_FHE different from traditional encryption?",
-      "options": ["It cannot be broken", "Computations are possible without decrypting", "It uses longer keys", "It works offline only"],
-      "answer": 1
-    },
-    {
-      "question": "Zama_FHE can be integrated with which technology?",
-      "options": ["Web3 apps", "Only Bitcoin", "Only Ethereum wallets", "Traditional databases only"],
-      "answer": 0
-    },
-    {
-      "question": "Which type of encryption does Zama_FHE use?",
-      "options": ["Symmetric encryption", "Asymmetric encryption", "Homomorphic encryption", "Hash-based encryption"],
-      "answer": 2
-    },
-    {
-      "question": "A major challenge in FHE is:",
-      "options": ["User interface", "Computation speed", "Token creation", "Wallet storage"],
-      "answer": 1
-    },
-    {
-      "question": "Zama_FHE ensures privacy without:",
-      "options": ["Any computation", "Revealing the original data", "Using blockchain", "Internet connection"],
-      "answer": 1
-    },
-    {
-      "question": "Which of these can be processed using Zama_FHE?",
-      "options": ["Plain text documents", "Encrypted medical records", "Open source code", "Public APIs"],
-      "answer": 1
-    },
-    {
-      "question": "What is one of the unique features of Zama_FHE for developers?",
-      "options": ["Ready-made NFTs", "Ability to run FHE computations in smart contracts", "Automatic token airdrops", "Built-in wallet"],
-      "answer": 1
-    },
-    {
-      "question": "Which problem does Zama_FHE solve in AI?",
-      "options": ["Slow computations", "Privacy leakage of sensitive data", "Model accuracy", "GPU usage"],
-      "answer": 1
-    },
-    {
-      "question": "Zama_FHE uses FHE to perform calculations without:",
-      "options": ["Any internet", "Accessing raw data", "CPU", "Storage"],
-      "answer": 1
-    },
-    {
-      "question": "Developers use Zama_FHE to:",
-      "options": ["Make encrypted databases", "Create Bitcoin miners", "Host websites only", "Trade crypto automatically"],
-      "answer": 0
-    },
-    {
-      "question": "Which statement best describes Zama_FHE?",
-      "options": ["A traditional blockchain for fast transactions", "A privacy layer that allows computations on encrypted data", "A token for NFT marketplaces", "A payment gateway"],
-      "answer": 1
+"use client";
+import React, { useState, useEffect, useMemo } from "react";
+
+/*
+  Zama IQ Master Challenge - Next.js page
+  Drop into: /app/page.jsx
+  Uses Tailwind for styling (configured above).
+*/
+
+export default function Page() {
+  const questions = useMemo(() => [
+    // LEVEL 1 — Easy (1..5)
+    { q: "What does FHE stand for?", o:["Fast Homomorphic Encryption","Fully Homomorphic Encryption","Functionally Hidden Encryption","Finite Homomorphic Encoding"], a:1, pts:1 },
+    { q: "What is the main value Zama Protocol adds?", o:["Faster blocks","Confidential on-chain computation","Lower gas fees","Larger blocks"], a:1, pts:1 },
+    { q: "Which language is used to write Zama encrypted contracts?", o:["Rust","Solidity","Python","Go"], a:1, pts:1 },
+    { q: "Where does heavy FHE computation typically run?", o:["On-chain EVM","Off-chain coprocessors","User browser only","Layer-0"], a:1, pts:1 },
+    { q: "What is a Gateway in Zama architecture?", o:["A KMS node","An orchestrator that handles ciphertext flow","A wallet provider","A consensus miner"], a:1, pts:1 },
+
+    // LEVEL 2 — Intermediate (6..12)
+    { q: "Why use a threshold KMS for FHE keys?", o:["Speed up encryption","Avoid single point of decryption control","Lower gas costs","Simplify UI"], a:1, pts:2 },
+    { q: "What is a coprocessor role?", o:["Encrypt user keys","Perform and verify FHE computations off-chain","Store public chain state","Act as a wallet"], a:1, pts:2 },
+    { q: "Encrypted types in FHEVM (example) include:", o:["euint / eint / ebool", "priv_uint / priv_bool", "sint / sbytes", "sealint / sealtx"], a:0, pts:2 },
+    { q: "How does composability work with encrypted state?", o:["Encrypted contracts can't interoperate","Encrypted state can be mixed with public contracts via host contracts and gateways","Only one encrypted contract per chain","Composability is impossible"], a:1, pts:2 },
+    { q: "Which of these is a major trade-off of FHE on chain?", o:["Lower security","Higher latency and compute cost","No smart contract support","Impossible verification"], a:1, pts:2 },
+    { q: "What must clients do before sending encrypted inputs on-chain?", o:["Send plain text first","Encrypt locally using public keys managed by KMS","Ask the miner","Call an oracle"], a:1, pts:2 },
+    { q: "What does the Gateway NOT do?", o:["Coordinate coprocessors","Manage ciphertext flows","Directly execute heavy FHE on-chain","Validate encrypted inputs"], a:2, pts:2 },
+
+    // LEVEL 3 — Expert (13..20)
+    { q: "Which statement is true about coprocessor verification?", o:["Coprocessors never publish proofs","Coprocessors can produce verifiable receipts or logs that help on-chain verification","Verification is always on-chain and trivial","Coprocessors replace consensus"], a:1, pts:3 },
+    { q: "Why is MPC used with KMS in Zama?", o:["To speed up encryption operations","To split trust so no single party can decrypt ciphertexts alone","To provide cheap storage","To avoid using FHE"], a:1, pts:3 },
+    { q: "When bridging ciphertexts across host chains, a key risk is:", o:["Different gas tokens","Replay attacks and key mismanagement","Faster finality","Lack of smart contracts"], a:1, pts:3 },
+    { q: "Which design reduces on-chain gas for ciphertext ops?", o:["Storing full plaintext on-chain","Batching FHE operations and minimizing ciphertext size","Using 512-bit ciphertext as default","Running everything in EVM directly"], a:1, pts:3 },
+    { q: "In a private auction built with Zama, which property is preserved?", o:["Bid amounts visible to all","Bidders identities and amounts remain encrypted until reveal phase","No one can verify winner","Bids are stored in plain logs"], a:1, pts:3 },
+    { q: "Which is a correct security assumption for Zama’s KMS?", o:["Single operator controls keys","Threshold of independent parties must collude to decrypt","Anyone can decrypt if they pay gas","Keys are public"], a:1, pts:3 },
+    { q: "Which verification approach helps ensure coprocessor honesty?", o:["On-chain universal reencryption","Off-chain witness generation (verifiable logs) plus on-chain checks","No verification is needed","Only trusting a single operator"], a:1, pts:3 },
+    { q: "A correct end-to-end flow for an encrypted computation looks like:", o:["User encrypts → gateway sends to coprocessor → coprocessor computes and returns ciphertext/receipt → result posted on-chain and client decrypts using KMS cooperation","User posts plaintext → coprocessor encrypts → miner decrypts","KMS alone computes everything without coprocessor","User sends raw private key on-chain"], a:0, pts:3 }
+  ], []);
+
+  const totalQuestions = questions.length;
+  const [idx, setIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [finished, setFinished] = useState(false);
+  const [points, setPoints] = useState(0);
+
+  useEffect(() => setSelected(null), [idx]);
+
+  function choose(i) {
+    if (selected !== null) return;
+    setSelected(i);
+    if (i === questions[idx].a) {
+      setScore(s => s + 1);
+      setPoints(p => p + questions[idx].pts);
     }
-  ]
+  }
+
+  function next() {
+    if (idx + 1 < totalQuestions) setIdx(idx + 1);
+    else setFinished(true);
+  }
+
+  function restart() {
+    setIdx(0); setScore(0); setSelected(null); setFinished(false); setPoints(0);
+  }
+
+  // compute IQ mapping: map earned points to an IQ-like scale
+  // total possible points:
+  const totalPoints = questions.reduce((s,q) => s + q.pts, 0);
+  const pct = Math.round((points / totalPoints) * 100);
+  const iq = Math.round((points / totalPoints) * 100 * 1.0 + 60); // 60..160 mapping
+
+  // rank
+  let rankLabel = "Zama Explorer";
+  if (points >= Math.round(totalPoints * 0.8)) rankLabel = "Zama Mastermind";
+  else if (points >= Math.round(totalPoints * 0.5)) rankLabel = "FHE Apprentice";
+
+  // helper: describeArc for SVG path (for the orb arc)
+  function polarToCartesian(cx, cy, r, angle) {
+    const a = (angle - 90) * Math.PI / 180.0;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  }
+  function describeArc(cx, cy, r, startAngle, endAngle) {
+    if (endAngle <= startAngle) return "";
+    const start = polarToCartesian(cx, cy, r, endAngle);
+    const end = polarToCartesian(cx, cy, r, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
+  }
+
+  // share text
+  const shareMsg = encodeURIComponent(`I just scored ${iq} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-black via-[#050506] to-[#071018] flex items-center justify-center p-6">
+      <div className="relative max-w-3xl w-full">
+        {/* Watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-6 z-0">
+          <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-64 h-64 object-contain transform -rotate-6" />
+        </div>
+
+        <div className="relative bg-[rgba(255,255,255,0.03)] border border-[rgba(255,215,0,0.06)] rounded-3xl p-8 shadow-2xl z-10 backdrop-blur-sm">
+          <header className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-10 h-10 object-contain rounded-md" />
+              <div>
+                <h1 className="text-2xl font-extrabold text-[var(--zama-yellow,#FFD700)]">Zama Protocol IQ Master Challenge</h1>
+                <p className="text-sm text-gray-300">From basics to expert — test real understanding of FHE & Zama architecture.</p>
+              </div>
+            </div>
+            <div className="text-xs text-gray-400">Q: <strong>{totalQuestions}</strong></div>
+          </header>
+
+          <div className="h-2 w-full bg-white/5 rounded-full mb-6 overflow-hidden">
+            <div className="h-full bg-[var(--zama-yellow,#FFD700)] transition-all" style={{ width: `${(idx / totalQuestions) * 100}%` }} />
+          </div>
+
+          {!finished ? (
+            <section>
+              <div className="mb-6">
+                <div className="text-sm text-gray-300 mb-2">Question <strong>{idx + 1}</strong> / {totalQuestions}</div>
+                <h2 className="text-lg font-semibold text-white">{questions[idx].q}</h2>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {questions[idx].o.map((opt, i) => {
+                  const correct = i === questions[idx].a;
+                  const chosen = selected === i;
+                  const base = "flex items-center gap-3 justify-center p-4 rounded-full border transition-all duration-200 text-sm font-medium";
+                  const classes = chosen
+                    ? correct
+                      ? base + " bg-[var(--zama-yellow,#FFD700)] text-black border-transparent shadow-md"
+                      : base + " bg-white/6 text-gray-300 opacity-60 border-transparent line-through"
+                    : base + " bg-white/2 text-gray-200 hover:bg-white/5 cursor-pointer";
+
+                  return (
+                    <button key={i} className={classes} onClick={() => choose(i)} disabled={selected !== null}>
+                      <span className="w-5 h-5 flex items-center justify-center rounded-full border border-[var(--zama-yellow,#FFD700)] mr-2" />
+                      <span className="truncate">{opt}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center justify-between mt-6">
+                <div className="text-sm text-gray-300">Difficulty points: <strong>{questions[idx].pts}</strong></div>
+                <button
+                  onClick={next}
+                  disabled={selected === null}
+                  className={`px-5 py-2 rounded-full font-semibold ${selected === null ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-[var(--zama-yellow,#FFD700)] text-black shadow"}`}
+                >
+                  {idx + 1 < totalQuestions ? "Next" : "Finish"}
+                </button>
+              </div>
+            </section>
+          ) : (
+            <section className="space-y-6">
+              <div className="flex items-center justify-center flex-col">
+                {/* Data Orb visual (unique) */}
+                <div className="relative w-56 h-56 flex items-center justify-center">
+                  <svg width="220" height="220" viewBox="0 0 120 120" className="drop-shadow-2xl">
+                    <defs>
+                      <radialGradient id="g1" cx="50%" cy="30%">
+                        <stop offset="0%" stopColor="#fff8d6" />
+                        <stop offset="60%" stopColor="#fff1a8" />
+                        <stop offset="100%" stopColor="#ffd700" />
+                      </radialGradient>
+                      <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#fff8d6" />
+                        <stop offset="100%" stopColor="#ffd700" />
+                      </linearGradient>
+                      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+                        <feMerge>
+                          <feMergeNode in="coloredBlur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+
+                    {/* base orb */}
+                    <circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.16" />
+
+                    {/* decorative outer rings */}
+                    <circle cx="60" cy="60" r="44" stroke="rgba(255,215,0,0.06)" strokeWidth="1" fill="none" />
+                    <circle cx="60" cy="60" r="50" stroke="rgba(255,215,0,0.03)" strokeWidth="2" fill="none" />
+
+                    {/* arc gauge */}
+                    <path d={describeArc(60, 60, 36, -120, -120 + (pct/100)*240)} fill="none" stroke="url(#arc)" strokeWidth="6" strokeLinecap="round" filter="url(#glow)" />
+
+                    {/* inner micro ring */}
+                    <circle cx="60" cy="60" r="20" fill="rgba(255,255,255,0.02)" />
+                  </svg>
+
+                  <div className="absolute text-center">
+                    <div className="text-3xl font-extrabold text-black" style={{ textShadow: "0 2px 20px rgba(255,215,0,0.12)" }}>{iq}</div>
+                    <div className="text-xs text-gray-800">Zama IQ</div>
+                    <div className="text-sm mt-1 text-gray-700">{pct}%</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 text-gray-200">You scored <strong>{points}</strong> points (out of {totalPoints}).</div>
+                <div className="mt-1 text-yellow-300 font-semibold">{rankLabel}</div>
+              </div>
+
+              <div className="flex items-center justify-center gap-4">
+                <a href={`https://twitter.com/intent/tweet?text=${shareMsg}`} target="_blank" rel="noreferrer">
+                  <button className="px-5 py-2 rounded-full bg-[var(--zama-yellow,#FFD700)] text-black font-semibold shadow">Share on X</button>
+                </a>
+                <button onClick={restart} className="px-5 py-2 rounded-full bg-white/6 text-white hover:bg-white/8">Play again</button>
+              </div>
+
+              <div className="mt-3 text-xs text-gray-400">Developed with 💛 by Zunnoorayn</div>
+            </section>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+// SVG arc helper (same math used above)
+function polarToCartesian(cx, cy, r, angle) {
+  const a = (angle - 90) * Math.PI / 180.0;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+function describeArc(cx, cy, r, startAngle, endAngle) {
+  if (endAngle <= startAngle) return "";
+  const start = polarToCartesian(cx, cy, r, endAngle);
+  const end = polarToCartesian(cx, cy, r, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
 }
