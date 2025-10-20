@@ -9,54 +9,65 @@
 <style>
   :root{
     --zama-yellow:#FFD700;
-    --bg-dark:#070707;
-    --card: rgba(255,255,255,0.04);
-    --glass-border: rgba(255,215,0,0.08);
-    --text-muted:#9aa4b2;
+    --soft-bg-start:#fffdf7;
+    --soft-bg-end:#fff9ea;
+    --card:#ffffff;
+    --muted: #6b7280;
+    --accent-shadow: 0 12px 30px rgba(255,183,6,0.12);
   }
-  html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-  body{background:radial-gradient(ellipse at 10% 10%, rgba(255,215,0,0.02), transparent 10%), linear-gradient(180deg, #000 0%, #04060a 100%); color:#fff; display:flex; align-items:center; justify-content:center; padding:28px;}
+  html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#0b1220;}
+  body{
+    background: linear-gradient(180deg, var(--soft-bg-start) 0%, var(--soft-bg-end) 100%);
+    display:flex; align-items:center; justify-content:center; padding:28px;
+  }
   .wrap{width:100%;max-width:980px; position:relative; z-index:2;}
-  .card{background:var(--card); border:1px solid var(--glass-border); border-radius:20px; padding:28px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); backdrop-filter: blur(6px);}
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.92));
+    border-radius:18px; padding:26px; box-shadow: var(--accent-shadow); border:1px solid rgba(0,0,0,0.04);
+  }
   header{display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .brand{display:flex; align-items:center; gap:14px;}
-  .brand img{width:56px;height:56px;border-radius:8px;object-fit:cover;}
-  h1{margin:0;font-size:20px;color:var(--zama-yellow);font-weight:800;letter-spacing:0.2px;}
-  p.lead{margin:4px 0 0 0;color:var(--text-muted);font-size:13px;}
-  .qcount{color:var(--text-muted); font-size:13px;}
-  .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:999px;margin:18px 0;overflow:hidden;}
+  .brand img{width:56px;height:56px;border-radius:10px;object-fit:cover;border:1px solid rgba(0,0,0,0.04)}
+  h1{margin:0;font-size:20px;color:#0b1220;font-weight:800;letter-spacing:0.2px;}
+  p.lead{margin:4px 0 0 0;color:var(--muted);font-size:13px;}
+  .qcount{color:var(--muted); font-size:13px;}
+  .progress{height:8px;background:rgba(11,18,32,0.04);border-radius:999px;margin:18px 0;overflow:hidden;}
   .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--zama-yellow),#ffd94d); width:0%; transition:width .4s ease;}
-  main .question{font-size:18px;margin:14px 0 18px 0; color:#e6eef7;}
+  main .question{font-size:18px;margin:14px 0 18px 0; color:#0b1220;}
   .options{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
-  .opt{background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding:14px; border-radius:999px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:all .18s ease; text-align:left;}
-  .opt:hover{transform:translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.45); border-color: rgba(255,215,0,0.18);}
+  .opt{
+    background: #fffefc;
+    border:1px solid rgba(11,18,32,0.06);
+    padding:14px; border-radius:999px; display:flex; align-items:center; gap:12px; cursor:pointer;
+    transition:all .14s ease; text-align:left; box-shadow: 0 4px 14px rgba(11,18,32,0.04);
+  }
+  .opt:hover{transform:translateY(-4px); border-color: rgba(255,183,6,0.18);}
   .opt .bullet{width:20px;height:20px;border-radius:50%; border:2px solid var(--zama-yellow); flex-shrink:0; display:inline-block;}
-  .opt.disabled{opacity:.55; pointer-events:none;}
+  .opt.disabled{opacity:.52; pointer-events:none;}
   .footer-row{display:flex; align-items:center; justify-content:space-between; margin-top:18px;}
-  .btn{background:var(--zama-yellow); color:#000; padding:10px 16px; border-radius:999px; font-weight:700; border:none; cursor:pointer; box-shadow: 0 10px 30px rgba(255,215,0,0.06); transition:transform .12s ease;}
-  .btn:active{transform:translateY(2px);}
-  .muted{color:var(--text-muted); font-size:13px;}
-  /* result */
-  .result{display:flex; gap:28px; align-items:center; justify-content:center; flex-direction:column; padding:10px;}
+  .btn{
+    background:var(--zama-yellow); color:#0b1220; padding:10px 16px; border-radius:999px; font-weight:800; border:none; cursor:pointer;
+    box-shadow: 0 8px 24px rgba(255,183,6,0.12); transition:transform .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .muted{color:var(--muted);font-size:13px;}
+  .result{display:flex; gap:28px; align-items:center; justify-content:center; flex-direction:column; padding:12px;}
   .gauge-wrap{position:relative; width:220px; height:220px;}
-  svg {display:block;}
+  svg{display:block;}
   .gauge-center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;}
-  .iq-num{font-size:36px; font-weight:800; color:#000; background:linear-gradient(90deg,#fff8d6,#ffd700); padding:8px 18px; border-radius:999px; box-shadow: 0 8px 20px rgba(0,0,0,0.35);}
-  .iq-sub{color:#222; font-weight:700; margin-top:6px; font-size:12px;}
-  .rank-badge{padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:999px; color:var(--zama-yellow); font-weight:700;}
+  .iq-num{font-size:36px; font-weight:800; color:#0b1220; background:linear-gradient(90deg,#fff8d6,#ffd700); padding:8px 18px; border-radius:999px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);}
+  .iq-sub{color:#333; font-weight:700; margin-top:6px; font-size:12px;}
+  .rank-badge{padding:8px 12px; background:#fff7e6; border-radius:999px; color:var(--zama-yellow); font-weight:800; border:1px solid rgba(255,183,6,0.12);}
   .share-row{display:flex; gap:10px; align-items:center;}
-  .share{background:#1D9BF0; color:white; padding:10px 14px; border-radius:999px; font-weight:700; border:none; cursor:pointer;}
-  .playagain{background:rgba(255,255,255,0.06); color:white; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.03); cursor:pointer;}
-  footer{margin-top:12px; text-align:center; color:var(--text-muted); font-size:13px;}
-  /* watermark behind card */
+  .share{background:#1D9BF0; color:white; padding:10px 14px; border-radius:999px; font-weight:800; border:none; cursor:pointer;}
+  .playagain{background:transparent; color:#0b1220; padding:10px 14px; border-radius:999px; border:1px solid rgba(11,18,32,0.06); cursor:pointer; font-weight:700;}
+  footer{margin-top:12px; text-align:center; color:var(--muted); font-size:13px;}
   .watermark{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:0; opacity:0.06; filter: blur(6px);}
   .watermark img{width:420px;height:420px;object-fit:contain; transform:rotate(-6deg);}
-  /* particle background */
   .particles{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
-  .particle{position:absolute;border-radius:50%; filter: blur(20px); opacity:.6; mix-blend-mode:screen;}
-  /* small responsive */
+  .particle{position:absolute;border-radius:50%; filter: blur(14px); opacity:.45; mix-blend-mode:screen;}
   @media (max-width:720px){
-    .options{grid-template-columns:1fr; }
+    .options{grid-template-columns:1fr;}
     .brand img{width:42px;height:42px;}
     .watermark img{width:320px;height:320px;}
     .gauge-wrap{width:180px;height:180px;}
@@ -65,9 +76,8 @@
 </style>
 </head>
 <body>
-  <!-- animated particles -->
   <div class="particles" aria-hidden="true">
-    <div class="particle" style="width:260px;height:260px;left:6%;top:6%;background:radial-gradient(circle,#ffd70033,#ffd70000);animation:move 18s linear infinite;"></div>
+    <div class="particle" style="width:260px;height:260px;left:4%;top:6%;background:radial-gradient(circle,#ffd70033,#ffd70000);animation:move 18s linear infinite;"></div>
     <div class="particle" style="width:180px;height:180px;left:72%;top:4%;background:radial-gradient(circle,#ffd70022,#ffd70000);animation:move 14s linear infinite;"></div>
     <div class="particle" style="width:220px;height:220px;left:42%;top:66%;background:radial-gradient(circle,#ffd7001a,#ffd70000);animation:move 20s linear infinite;"></div>
   </div>
@@ -81,7 +91,7 @@
           <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="Zama logo" />
           <div>
             <h1 id="title">Zama Protocol IQ Master Challenge</h1>
-            <p class="lead">20 questions — basics → expert. Pro mode: learn & prove your FHE knowledge.</p>
+            <p class="lead">20 questions — basics → expert. Educational & pro mode.</p>
           </div>
         </div>
         <div class="qcount">20 Q</div>
@@ -92,7 +102,7 @@
       <main id="main">
         <div id="quiz">
           <div class="question" id="question">Question text</div>
-          <div class="options" id="options"></div>
+          <div class="options" id="options" aria-live="polite"></div>
 
           <div class="footer-row">
             <div class="muted" id="qmeta">Difficulty: —</div>
@@ -104,7 +114,6 @@
 
         <div id="result" style="display:none" class="result" aria-hidden="true">
           <div class="gauge-wrap" id="gwrap">
-            <!-- SVG gauge rendered by JS -->
             <svg id="gauge" width="220" height="220" viewBox="0 0 120 120" aria-hidden="true"></svg>
             <div class="gauge-center">
               <div class="iq-num" id="iqNum">120</div>
@@ -113,7 +122,7 @@
           </div>
 
           <div id="resultText" style="text-align:center;">
-            <div style="margin-top:6px;color:#dce6ef">You answered <strong id="correctCount">0</strong> / 20 correctly.</div>
+            <div style="margin-top:6px;color:#223246">You answered <strong id="correctCount">0</strong> / 20 correctly.</div>
             <div style="margin-top:6px;"><span class="rank-badge" id="rankLabel">Zama Explorer</span></div>
           </div>
 
@@ -125,50 +134,45 @@
       </main>
 
       <footer>
-        Developed with 💛 by <strong>Zunnoorayn</strong>
+        Crafted with 💛 by <strong>Zunnoorayn</strong> | Powered by Zama
       </footer>
     </div>
   </div>
 
 <script>
-/* Questions: 20 educational/pro (easy -> expert). Each has pts for weighting. */
+/* 20 educational, mixed-level questions (pts weight: easy=1, mid=2, expert=3) */
 const QUESTIONS = [
-  // Level 1 (easy) 1pt
+  // Easy (1pt)
   {q:"What does FHE stand for?", o:["Fast Homomorphic Encryption","Fully Homomorphic Encryption","Functional Hidden Encryption","Finite Homomorphic Encoding"], a:1, pts:1},
-  {q:"What primary problem does Zama Protocol address?", o:["Faster block finality","Confidential on-chain computation","Lower gas costs","Cross-chain swaps"], a:1, pts:1},
-  {q:"Which language is used to write encrypted contracts on Zama FHEVM?", o:["Rust","Solidity","Python","Go"], a:1, pts:1},
-  {q:"Where should user data be encrypted before sending to the chain?", o:["Encrypt locally client-side","Send plaintext then encrypt on-chain","No encryption needed","Upload to IPFS first"], a:0, pts:1},
-  {q:"Which component coordinates ciphertext flow and coprocessors?", o:["Miner","Gateway","Wallet","Explorer"], a:1, pts:1},
+  {q:"What primary problem does Zama Protocol address?", o:["Faster block finality","Confidential on-chain computation","Lower gas fees","Cross-chain swaps"], a:1, pts:1},
+  {q:"Which language is commonly used for encrypted contracts in Zama stack?", o:["Rust","Solidity","Python","Go"], a:1, pts:1},
+  {q:"Where should sensitive data be encrypted before interacting with Zama contracts?", o:["Encrypt locally client-side","Send plaintext then encrypt on-chain","Store on IPFS then send link","Use miner encryption"], a:0, pts:1},
+  {q:"Which component orchestrates ciphertext flows and access control?", o:["Miner","Gateway","Wallet","Explorer"], a:1, pts:1},
 
-  // Level 2 (intermediate) 2pts
-  {q:"Why use threshold KMS with FHE keys?", o:["Make encryption faster","Prevent any single party from decrypting alone","Lower gas fees","Simplify frontend"], a:1, pts:2},
-  {q:"What is the main job of a coprocessor in Zama architecture?", o:["Mine blocks","Run and verify heavy FHE computations off-chain","Host wallets","Serve web pages"], a:1, pts:2},
-  {q:"Which encrypted Solidity types are representative in FHEVM?", o:["euint, eint, ebool, ebytes","privuint, secretint, lockbool","sealed_uint, sealed_bool","crypt_uint, crypt_bool"], a:0, pts:2},
-  {q:"How can encrypted contracts remain composable with public contracts?", o:["They can't","Through host contracts & gateways that bridge ciphertext interactions","By revealing plaintext to other contracts","Only via off-chain calls"], a:1, pts:2},
-  {q:"What practical trade-off does FHE introduce?", o:["Lower security","Higher compute cost and latency","Impossible to verify results","Unlimited scalability"], a:1, pts:2},
-  {q:"Before sending ciphertexts, clients typically need what from KMS?", o:["Decryption keys","Public encryption parameters or key material for encryption","Gas tokens","Proof-of-work"], a:1, pts:2},
-  {q:"Which action reduces on-chain gas for FHE operations?", o:["Using full 4096-bit ciphertexts everywhere","Batching ciphertext operations and minimizing ciphertext size","Decrypting everything on-chain","Storing plaintext on IPFS"], a:1, pts:2},
+  // Intermediate (2pts)
+  {q:"Why use threshold KMS with FHE keys?", o:["Speed up FHE ops","Avoid single point of decryption control","Lower gas fees","Simplify UI"], a:1, pts:2},
+  {q:"What is the role of a coprocessor?", o:["Mine encrypted transactions","Run/verify heavy FHE computations off-chain","Host frontend SDK","Act as a price oracle"], a:1, pts:2},
+  {q:"Which example encrypted types are used in FHEVM?", o:["euint, eint, ebool, ebytes","privuint, secretint, lockbool","sealint, sealtx","crypt_uint, crypt_bool"], a:0, pts:2},
+  {q:"How do encrypted contracts maintain composability?", o:["They cannot","Via host contracts & gateways that bridge ciphertext interactions","By revealing plaintext to other contracts","Only via centralized oracles"], a:1, pts:2},
+  {q:"Common FHE trade-off important for design is:", o:["Lower security","Higher compute cost and latency","Incompatibility with EVM","Impossible verification"], a:1, pts:2},
+  {q:"Before encrypting inputs clients need:", o:["Miner signatures","Public encryption parameters or keys from KMS","Plaintext signatures","A new token"], a:1, pts:2},
+  {q:"What reduces gas cost for ciphertext logic?", o:["Storing plaintext on-chain","Batching operations and minimizing ciphertext size","Using larger ciphertexts","Decrypt on-chain"], a:1, pts:2},
 
-  // Level 3 (expert) 3pts
-  {q:"Which verification method strengthens trust in coprocessors' outputs?", o:["No verification","Off-chain verifiable receipts + on-chain checks","Trust-only model","Single-signer attestations only"], a:1, pts:3},
-  {q:"Why does Zama use MPC for key management?", o:["To store keys cheaply","To split trust so no single operator can decrypt","To accelerate consensus","To eliminate coprocessors"], a:1, pts:3},
-  {q:"What risk should be addressed when bridging ciphertexts between host chains?", o:["Different gas tokens","Replay, key mismatch, and routing attacks","Short block times","Storage limits"], a:1, pts:3},
-  {q:"In a confidential auction built using Zama, which property holds?", o:["Bids are public immediately","Bid amounts remain encrypted until reveal or claim","Winner cannot be verified","All bids are decrypted to everyone"], a:1, pts:3},
-  {q:"Which design helps make FHE practical in production?", o:["Do all work on-chain","Offload heavy computation to coprocessors and verify succinctly on-chain","Require users to decrypt on-chain","Use very large ciphertexts always"], a:1, pts:3},
-  {q:"Which statement about KMS security assumptions is correct?", o:["Single operator controls keys","A threshold of independent parties must collude to decrypt","Keys are stored publicly","KMS replaces encryption entirely"], a:1, pts:3},
-  {q:"An end-to-end encrypted compute flow typically is:", o:["User encrypts → Gateway routes → Coprocessor computes + returns ciphertext/receipt → On-chain result recorded → Client decrypts via KMS cooperation","User sends plaintext → Coprocessor encrypts → Miner validates","KMS does everything without coprocessor","User posts raw keys on-chain"], a:0, pts:3},
-  {q:"What is a practical optimization for ciphertext costs?", o:["Always use 256-bit plaintext slots","Pack multiple small values into single ciphertexts and minimize rounds","Prefer one-by-one operations","Avoid batching"], a:1, pts:3}
+  // Expert (3pts)
+  {q:"Which verification method improves coprocessor trust?", o:["No verification required","Off-chain verifiable receipts + on-chain checks","Trust-only attestation","Single-signer proofs"], a:1, pts:3},
+  {q:"Why use MPC in KMS design?", o:["Faster encryption","Split trust so no single party can decrypt","Replace FHE","Reduce ciphertext size"], a:1, pts:3},
+  {q:"Key risk when bridging ciphertexts across chains is:", o:["Different token standards","Replay, key mismatch, and routing attacks","Faster finality","Block size"], a:1, pts:3},
+  {q:"In a confidential auction built on Zama, which holds?", o:["All bids public","Bids encrypted until reveal or settlement","Winner cannot be verified","Bids stored plaintext"], a:1, pts:3},
+  {q:"Which approach makes FHE practical in production?", o:["Do everything on-chain","Offload heavy compute to coprocessors and verify on-chain","Require all users to run FHE locally","Use huge ciphertexts without batching"], a:1, pts:3},
+  {q:"Correct KMS security assumption:", o:["Single operator controls keys","Threshold of independent parties must collude to decrypt","Keys are public","KMS is unnecessary"], a:1, pts:3},
+  {q:"End-to-end encrypted compute flow:", o:["User encrypts → Gateway routes → Coprocessor computes + returns ciphertext/receipt → On-chain result recorded → Client decrypts via KMS cooperation","User sends plaintext → Coprocessor encrypts → Miner validates","KMS does all compute","User posts keys"], a:0, pts:3},
+  {q:"Practical optimization to lower ciphertext costs:", o:["Always use maximum precision","Pack small values into single ciphertexts and minimize rounds","Run many small separate ops","Decrypt frequently on-chain"], a:1, pts:3}
 ];
 
-let index = 0;
-let score = 0;
-let points = 0;
-let selected = null;
+let index = 0, score = 0, points = 0, selected = null;
+const totalQ = QUESTIONS.length, totalPts = QUESTIONS.reduce((s,q)=>s+q.pts,0);
 
-const totalQ = QUESTIONS.length;
-const totalPts = QUESTIONS.reduce((s,q)=>s+q.pts,0);
-
-/* UI elements */
+/* UI refs */
 const qEl = document.getElementById('question');
 const optsEl = document.getElementById('options');
 const progEl = document.getElementById('prog');
@@ -184,6 +188,7 @@ const rankLabelEl = document.getElementById('rankLabel');
 const shareBtn = document.getElementById('shareBtn');
 const retryBtn = document.getElementById('retryBtn');
 
+/* Render question */
 function renderQuestion(){
   selected = null;
   nextBtn.disabled = true;
@@ -192,31 +197,24 @@ function renderQuestion(){
   qEl.textContent = item.q;
   optsEl.innerHTML = '';
   qmeta.textContent = `Difficulty points: ${item.pts}`;
-  QUESTIONS[index].o.forEach((opt, i) => {
+  item.o.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'opt';
     btn.innerHTML = `<span class="bullet" aria-hidden="true"></span><span style="flex:1">${opt}</span>`;
     btn.onclick = () => {
-      // lock selection
       if (selected !== null) return;
       selected = i;
-      // disable all options visually
+      // disable all visually then highlight chosen
       Array.from(optsEl.children).forEach((c, idx) => {
         c.classList.add('disabled');
-        if (idx === i) c.classList.remove('disabled');
+        if (idx === i) {
+          c.classList.remove('disabled');
+          c.style.background = 'linear-gradient(90deg,#fff8d6,#ffd700)';
+          c.style.color = '#0b1220';
+        }
       });
-      // check correctness
-      if (i === item.a) {
-        score++;
-        points += item.pts;
-        // mark chosen as correct style
-        optsEl.children[i].style.background = 'linear-gradient(90deg,#fff6d6,#ffd700)';
-        optsEl.children[i].style.color = '#000';
-      } else {
-        optsEl.children[i].style.opacity = '0.6';
-      }
+      if (i === item.a) { score++; points += item.pts; }
       nextBtn.disabled = false;
-      // update progress small
     };
     optsEl.appendChild(btn);
   });
@@ -224,44 +222,36 @@ function renderQuestion(){
   progEl.style.width = percent + '%';
 }
 
+/* next */
 nextBtn.addEventListener('click', ()=>{
   if (selected === null) return;
-  if (index+1 < totalQ){
-    index++;
-    renderQuestion();
-    window.scrollTo({top:0, behavior:'smooth'});
-  } else {
-    finishQuiz();
-  }
+  if (index+1 < totalQ){ index++; renderQuestion(); window.scrollTo({top:0, behavior:'smooth'}); }
+  else finishQuiz();
 });
 
+/* finish */
 function finishQuiz(){
   quizBox.style.display = 'none';
   resultBox.style.display = 'flex';
   const pct = Math.round((points/totalPts)*100);
-  const iq = Math.round((points/totalPts)*100 + 60); // map to 60..160
+  const iq = Math.round((points/totalPts)*100 + 60); // 60..160 mapping
   iqNum.innerText = iq;
   iqPct.innerText = pct + '%';
   correctCountEl.innerText = score;
-  // rank
   let rank = 'Zama Explorer';
   if (points >= Math.round(totalPts*0.8)) rank = 'Zama Mastermind';
   else if (points >= Math.round(totalPts*0.5)) rank = 'FHE Apprentice';
   rankLabelEl.innerText = rank;
-
-  // render gauge (speedometer arc)
   renderGauge(pct);
 }
 
+/* render speedometer arc */
 function renderGauge(pct){
-  // render semicircular arc from -120deg to 120deg (240deg sweep)
   const start = -120;
   const sweep = 240 * (pct/100);
-  // draw background arc
-  const bg = `<path d="${describeArc(60,60,36,start, start+240)}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" stroke-linecap="round"/>`;
-  // foreground arc
-  const fg = `<path d="${describeArc(60,60,36,start, start+sweep)}" fill="none" stroke="url(#arc)" stroke-width="6" stroke-linecap="round"/>`;
-  const defs = `
+  const bgPath = describeArc(60,60,36,start, start+240);
+  const fgPath = describeArc(60,60,36,start, start+sweep);
+  gaugeSVG.innerHTML = `
     <defs>
       <radialGradient id="g1" cx="50%" cy="30%">
         <stop offset="0%" stop-color="#fff8d6"/>
@@ -276,20 +266,19 @@ function renderGauge(pct){
         <feGaussianBlur stdDeviation="6" result="coloredBlur" />
         <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-    </defs>`;
-  const inner = `<circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.12" />`;
-  gaugeSVG.innerHTML = defs + bg + fg + inner;
-  // animate stroke-dashoffset - we'll create a temporary animation by cloning path and staggering opacity
-  // (SVG path draws are immediate; to fake a smooth fill, rely on CSS transition using stroke-dasharray if needed)
-  // For simplicity we leave it static; the arc itself represents the pct visually.
+    </defs>
+    <path d="${bgPath}" fill="none" stroke="rgba(11,18,32,0.06)" stroke-width="6" stroke-linecap="round"></path>
+    <path d="${fgPath}" fill="none" stroke="url(#arc)" stroke-width="6" stroke-linecap="round" filter="url(#glow)"></path>
+    <circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.12"></circle>
+  `;
 }
 
-/* helper: translate arc */
-function polarToCartesian(cx, cy, r, angle){
+/* arc math helpers */
+function polarToCartesian(cx,cy,r,angle){
   const a = (angle - 90) * Math.PI / 180.0;
-  return {x: cx + r * Math.cos(a), y: cy + r * Math.sin(a)};
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
 }
-function describeArc(cx, cy, r, startAngle, endAngle){
+function describeArc(cx,cy,r,startAngle,endAngle){
   if (endAngle <= startAngle) return '';
   const start = polarToCartesian(cx,cy,r,endAngle);
   const end = polarToCartesian(cx,cy,r,startAngle);
@@ -297,11 +286,11 @@ function describeArc(cx, cy, r, startAngle, endAngle){
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
 }
 
-/* share button */
+/* share behavior */
 shareBtn.addEventListener('click', ()=>{
-  const text = encodeURIComponent(`${iqNum.innerText} IQ — I just scored ${iqNum.innerText} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
-  const url = `https://twitter.com/intent/tweet?text=${text}`;
-  window.open(url,'_blank');
+  const iq = document.getElementById('iqNum').innerText;
+  const text = encodeURIComponent(`I just scored ${iq} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');
 });
 
 /* retry */
@@ -315,15 +304,15 @@ retryBtn.addEventListener('click', ()=>{
 /* initial render */
 renderQuestion();
 
-/* particle motion */
+/* particle motion (gentle) */
 (function animateParticles(){
   const parts = document.querySelectorAll('.particle');
-  parts.forEach((p, i)=>{
-    const dur = 14 + (i*4);
+  parts.forEach((p,i)=>{
+    const dur = 16 + i*4;
     p.animate([
-      { transform: 'translateY(0) translateX(0) scale(1)' },
-      { transform: 'translateY(-36px) translateX(20px) scale(1.06)' },
-      { transform: 'translateY(0) translateX(0) scale(1)' }
+      { transform:'translateY(0) translateX(0) scale(1)' },
+      { transform:'translateY(-34px) translateX(18px) scale(1.06)' },
+      { transform:'translateY(0) translateX(0) scale(1)' }
     ], { duration: dur*1000, iterations: Infinity, delay: i*400 });
   });
 })();
