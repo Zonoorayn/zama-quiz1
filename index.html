@@ -1,223 +1,263 @@
-"use client";
-import React, { useState, useEffect, useMemo } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zama Protocol IQ Challenge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --zama-yellow: #FFD700;
+      --bg-dark: #070707;
+      --card: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,215,0,0.08);
+    }
 
-// Next.js single-file page component. Drop into app/page.jsx (or app/page.tsx) in a Next.js + Tailwind project.
-// This is a polished production-ready single-page React component that renders the Zama Protocol IQ Challenge.
-// It uses Tailwind utility classes and inlined SVG for the Data Orb IQ badge.
+    /* Particle background */
+    .particles { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.12), rgba(255,215,0,0));
+      filter: blur(18px); mix-blend-mode: screen; opacity: .7;
+      animation: float 12s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(-24px) translateX(12px) scale(1.08); }
+      100% { transform: translateY(0) translateX(0) scale(1); }
+    }
 
-export default function ZamaQuizPage() {
-  const questions = useMemo(() => [
-    { q: "What is the main goal of the Zama Protocol?", o: ["To speed up blockchain transactions", "To build private smart contracts using encrypted data", "To replace EVM", "To store off-chain data on IPFS"], a: 1 },
-    { q: "Which encryption technology powers the Zama Protocol?", o: ["Zero-Knowledge Proofs", "Multi-Signature Encryption", "Fully Homomorphic Encryption (FHE)", "Advanced Hash Encoding"], a: 2 },
-    { q: "What does FHE allow developers to do?", o: ["Hide the smart contract code", "Compute directly on encrypted data", "Compress blockchain data", "Decrypt transactions publicly"], a: 1 },
-    { q: "What is FHEVM?", o: ["A new blockchain consensus algorithm", "A virtual machine that runs encrypted smart contracts", "A mobile crypto wallet", "A key management token"], a: 1 },
-    { q: "Which programming language is used to write contracts in Zama Protocol?", o: ["Python", "Go", "Solidity", "Rust"], a: 2 },
-    { q: "What does the Zama Protocol combine to maintain performance and privacy?", o: ["On-chain and off-chain components", "Public and private blockchains", "Decentralized and centralized databases", "Open-source and closed-source tools"], a: 0 },
-    { q: "What is the main role of the Key Management Service (KMS)?", o: ["To store user passwords", "To generate and manage encryption keys securely", "To mine encrypted blocks", "To compress blockchain data"], a: 1 },
-    { q: "What are coprocessors responsible for in the protocol?", o: ["Managing NFT minting", "Running off-chain encrypted computations", "Building blockchain bridges", "Handling token swaps"], a: 1 },
-    { q: "What does the Gateway do?", o: ["It manages encrypted data flow and coordinates off-chain services", "It hosts the blockchain explorer", "It sends marketing emails", "It controls gas fees"], a: 0 },
-    { q: "Which of the following is NOT part of Zama Protocol’s architecture?", o: ["FHEVM Solidity Library", "Gateway", "Coprocessor", "Proof-of-Stake Validator"], a: 3 },
-    { q: "What type of data does the Zama Protocol keep encrypted?", o: ["Only metadata", "Transaction amounts and user data", "Chain IDs", "Source codes"], a: 1 },
-    { q: "What warning is included in the official docs about the testnet?", o: ["It is unstable but safe to store funds", "It is audited and ready for production", "It is not audited and not for production use", "It requires mining before testing"], a: 2 },
-    { q: "Which of these is an example use-case for Zama Protocol?", o: ["Open DeFi dashboards", "Confidential auctions and voting", "Token burning", "Wallet authentication"], a: 1 },
-    { q: "What are the encrypted Solidity types introduced by FHEVM?", o: ["euint, eint, ebool, ebytes", "privuint, cryptoint, secretbool", "uint_priv, int_priv", "sealuint, sealint"], a: 0 },
-    { q: "What is a main advantage of Zama Protocol for blockchain developers?", o: ["They can run private computations while keeping composability", "They can remove all smart contract fees", "They can hide contract logic from themselves", "They can bypass EVM gas usage"], a: 0 }
-  ], []);
+    /* Watermark */
+    .watermark {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      z-index: 0; pointer-events: none; opacity: 0.06;
+      mix-blend-mode: screen;
+      filter: blur(6px);
+    }
+    .watermark img { width: 320px; height: 320px; object-fit: contain; transform: rotate(-6deg); }
 
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [finished, setFinished] = useState(false);
+    /* IQ circle */
+    .circle-wrap { width: 160px; height: 160px; display:flex; align-items:center; justify-content:center; margin: 0 auto; }
+    svg { transform: rotate(-90deg); }
+    .center-text { position: absolute; text-align:center; }
+    .iq-number { font-weight: 800; font-size: 20px; color: #0b0b0b; }
+    .iq-label { font-size: 12px; color: #0b0b0b; }
 
-  const total = questions.length;
+    /* Button */
+    .btn-yellow { background: var(--zama-yellow); color:#000; font-weight:700; border-radius:999px; padding:10px 16px; }
+    .btn-yellow:hover { filter:brightness(.95); transform: translateY(-2px); transition: all .18s ease; }
 
-  useEffect(() => setSelected(null), [index]);
+    /* small responsiveness */
+    @media (max-width:520px) {
+      .card { padding: 20px; border-radius: 18px; }
+      .circle-wrap { width: 140px; height:140px; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-black via-[#07070a] to-[#08080a] min-h-screen flex items-center justify-center text-white font-sans">
+  <!-- Particle background -->
+  <div class="particles" aria-hidden="true">
+    <div class="particle" style="width:260px;height:260px;left:5%;top:10%;animation-duration:20s;"></div>
+    <div class="particle" style="width:180px;height:180px;left:70%;top:5%;animation-duration:16s;"></div>
+    <div class="particle" style="width:220px;height:220px;left:40%;top:65%;animation-duration:22s;"></div>
+    <div class="particle" style="width:120px;height:120px;left:85%;top:55%;animation-duration:18s;"></div>
+  </div>
 
-  const select = (i) => {
-    if (selected !== null) return;
-    setSelected(i);
-    if (i === questions[index].a) setScore((s) => s + 1);
-  };
+  <div class="relative z-10 max-w-xl w-full px-6">
+    <div class="watermark">
+      <!-- chosen watermark logo (GitHub avatar variant) -->
+      <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="Zama logo watermark" />
+    </div>
 
-  const handleNext = () => {
-    if (index + 1 < total) setIndex((v) => v + 1);
-    else setFinished(true);
-  };
-
-  const restart = () => {
-    setIndex(0); setScore(0); setSelected(null); setFinished(false);
-  };
-
-  const pct = Math.round((score / total) * 100);
-  const iq = Math.round((score / total) * 100 * 1.0 + 60); // map to 60..160
-
-  // SVG gauge helpers
-  const startAngle = -210; // left-bottom start
-  const sweepMax = 240; // degrees
-  const sweep = (pct / 100) * sweepMax;
-
-  // share text
-  const shareText = `I just scored ${iq} IQ on the Zama Protocol Quiz! 🧠
-Try it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`;
-
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-[#050506] to-[#071018] flex items-center justify-center p-6">
-      <div className="relative max-w-3xl w-full">
-        {/* Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-6 z-0">
-          <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-64 h-64 object-contain transform -rotate-6" />
+    <div class="card relative bg-[var(--card)] border" style="border-radius:26px; padding:34px; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index:1;">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold" style="color:var(--zama-yellow); letter-spacing:0.4px">Zama Protocol IQ Challenge</h1>
+          <p class="text-sm text-gray-300 mt-1">Test your knowledge of FHE & privacy — show off your score.</p>
         </div>
-
-        <div className="relative bg-[rgba(255,255,255,0.03)] border border-[rgba(255,215,0,0.06)] rounded-3xl p-8 shadow-2xl z-10 backdrop-blur-sm">
-          <header className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <img src="https://avatars.githubusercontent.com/u/57671822?s=280&v=4" alt="zama" className="w-10 h-10 object-contain rounded-md" />
-              <div>
-                <h1 className="text-2xl font-extrabold text-[var(--zama-yellow,#FFD700)]">Zama Protocol IQ Challenge</h1>
-                <p className="text-sm text-gray-300">Test your knowledge on FHE & confidential smart contracts.</p>
-              </div>
-            </div>
-            <div className="text-xs text-gray-400">Questions: <strong>{total}</strong></div>
-          </header>
-
-          <div className="h-2 w-full bg-white/5 rounded-full mb-6 overflow-hidden">
-            <div className="h-full bg-[var(--zama-yellow,#FFD700)] transition-all" style={{ width: `${(index / total) * 100}%` }} />
-          </div>
-
-          {!finished ? (
-            <section>
-              <div className="mb-6">
-                <div className="text-sm text-gray-300 mb-2">Question <strong>{index + 1}</strong> / {total}</div>
-                <h2 className="text-lg font-semibold text-white">{questions[index].q}</h2>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                {questions[index].o.map((opt, i) => {
-                  const correct = i === questions[index].a;
-                  const chosen = selected === i;
-                  const base = "flex items-center gap-3 justify-center p-4 rounded-full border transition-all duration-200 text-sm font-medium";
-                  const classes = chosen
-                    ? correct
-                      ? base + " bg-[var(--zama-yellow,#FFD700)] text-black border-transparent shadow-md"
-                      : base + " bg-white/6 text-gray-300 opacity-60 border-transparent line-through"
-                    : base + " bg-white/2 text-gray-200 hover:bg-white/5 cursor-pointer";
-
-                  return (
-                    <button key={i} className={classes} onClick={() => select(i)} disabled={selected !== null}>
-                      <span className="w-5 h-5 flex items-center justify-center rounded-full border border-[var(--zama-yellow,#FFD700)] mr-2" />
-                      <span className="truncate">{opt}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center justify-between mt-6">
-                <div className="text-sm text-gray-300">Answer carefully — this calculates your Zama IQ</div>
-                <button
-                  onClick={handleNext}
-                  disabled={selected === null}
-                  className={`px-5 py-2 rounded-full font-semibold ${selected === null ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-[var(--zama-yellow,#FFD700)] text-black shadow"}`}>
-                  {index + 1 < total ? "Next" : "Finish"}
-                </button>
-              </div>
-            </section>
-          ) : (
-            <section className="space-y-6">
-              <div className="flex items-center justify-center flex-col">
-                {/* Data Orb: unique visual */}
-                <div className="relative w-56 h-56 flex items-center justify-center">
-                  <svg width="220" height="220" viewBox="0 0 120 120" className="drop-shadow-2xl">
-                    <defs>
-                      <radialGradient id="g1" cx="50%" cy="30%">
-                        <stop offset="0%" stopColor="#fff8d6" />
-                        <stop offset="60%" stopColor="#fff1a8" />
-                        <stop offset="100%" stopColor="#ffd700" />
-                      </radialGradient>
-                      <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#fff8d6" />
-                        <stop offset="100%" stopColor="#ffd700" />
-                      </linearGradient>
-                      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-                        <feMerge>
-                          <feMergeNode in="coloredBlur" />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </feMerge>
-                    </filter>
-                    </defs>
-
-                    {/* base orb */}
-                    <circle cx="60" cy="60" r="36" fill="url(#g1)" opacity="0.16" />
-
-                    {/* decorative outer rings */}
-                    <circle cx="60" cy="60" r="44" stroke="rgba(255,215,0,0.06)" strokeWidth="1" fill="none" />
-                    <circle cx="60" cy="60" r="50" stroke="rgba(255,215,0,0.03)" strokeWidth="2" fill="none" />
-
-                    {/* arc gauge (uses polar arc path) */}
-                    <path d={describeArc(60, 60, 36, startAngle, startAngle + sweep)} fill="none" stroke="url(#arc)" strokeWidth="6" strokeLinecap="round" filter="url(#glow)" />
-
-                    {/* inner micro rings */}
-                    <circle cx="60" cy="60" r="20" fill="rgba(255,255,255,0.02)" />
-                  </svg>
-
-                  <div className="absolute text-center">
-                    <div className="text-3xl font-extrabold text-black" style={{ textShadow: "0 2px 20px rgba(255,215,0,0.12)" }}>{iq}</div>
-                    <div className="text-xs text-gray-800">Zama IQ</div>
-                    <div className="text-sm mt-1 text-gray-700">{pct}%</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 text-gray-200">You answered <strong>{score}</strong> out of <strong>{total}</strong> correctly.</div>
-              </div>
-
-              <div className="flex items-center justify-center gap-4">
-                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`} target="_blank" rel="noreferrer">
-                  <button className="px-5 py-2 rounded-full bg-[var(--zama-yellow,#FFD700)] text-black font-semibold shadow">Share on X</button>
-                </a>
-                <button onClick={restart} className="px-5 py-2 rounded-full bg-white/6 text-white hover:bg-white/8">Play again</button>
-              </div>
-
-              <div className="mt-3 text-xs text-gray-400">Zama Protocol Quiz</div>
-            </section>
-          )}
+        <div style="text-align:right">
+          <div style="font-size:12px;color:#bdbdbd">Pro</div>
+          <div class="text-xs mt-1" style="color:#999">Built by <strong style="color:var(--zama-yellow)">Zunnoorayn</strong></div>
         </div>
       </div>
-    </main>
-  );
-}
 
-/* ---------------------------------------------------------- */
-/* Helper: draw an SVG arc path (describes an arc using polar coords)
-   center x,y  radius  startAngle endAngle (deg)                */
-function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
-  return {
-    x: centerX + radius * Math.cos(angleInRadians),
-    y: centerY + radius * Math.sin(angleInRadians),
-  };
-}
+      <!-- Progress -->
+      <div class="h-2 w-full bg-white/5 rounded-full mb-6 overflow-hidden">
+        <div id="progress-bar" class="h-full bg-[var(--zama-yellow)] transition-all" style="width:0%"></div>
+      </div>
 
-function describeArc(x, y, radius, startAngle, endAngle) {
-  if (endAngle - startAngle <= 0) {
-    // return an empty path
-    return "";
-  }
-  const start = polarToCartesian(x, y, radius, endAngle);
-  const end = polarToCartesian(x, y, radius, startAngle);
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-  const d = [
-    "M",
-    start.x,
-    start.y,
-    "A",
-    radius,
-    radius,
-    0,
-    largeArcFlag,
-    0,
-    end.x,
-    end.y,
-  ].join(" ");
-  return d;
-}
+      <!-- Quiz area -->
+      <div id="quiz-area" class="relative z-20">
+        <div id="qbox" class="mb-6">
+          <p id="question" class="text-lg font-medium leading-snug">Question text</p>
+        </div>
+
+        <div id="options" class="grid grid-cols-2 gap-3 mb-6">
+          <!-- option buttons inserted here -->
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-300" id="progress-text">Question <span id="qindex">1</span>/<span id="qcount">10</span></div>
+          <button id="next-btn" class="btn-yellow hidden">Next</button>
+        </div>
+      </div>
+
+      <!-- Result area (hidden until finish) -->
+      <div id="result-area" class="hidden text-center pt-6">
+        <div class="circle-wrap relative mb-4">
+          <svg width="160" height="160" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fff3c4" />
+                <stop offset="100%" stop-color="var(--zama-yellow)" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"></circle>
+            <circle id="meter" cx="50" cy="50" r="40" stroke="url(#grad)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+          </svg>
+          <div class="center-text" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div id="iq-num" class="iq-number">120</div>
+            <div id="iq-pct" class="text-xs text-gray-700 iq-label">80%</div>
+          </div>
+        </div>
+
+        <div id="final-text" class="mb-4 text-gray-200"></div>
+
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <button id="retry" class="bg-white/6 px-4 py-2 rounded-full text-white hover:bg-white/10">Play Again</button>
+          <button id="share" class="btn-yellow">Share on X</button>
+        </div>
+
+        <div class="text-xs text-gray-500">Developed with 💛 by <strong>Zunnoorayn</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Full 15 questions (from earlier). Adjust if you want to expand.
+    const quizData = [
+      { q: "What is the main goal of the Zama Protocol?", o: ["To speed up blockchain transactions", "To build private smart contracts using encrypted data", "To replace EVM", "To store off-chain data on IPFS"], a: 1 },
+      { q: "Which encryption technology powers the Zama Protocol?", o: ["Zero-Knowledge Proofs", "Multi-Signature Encryption", "Fully Homomorphic Encryption (FHE)", "Advanced Hash Encoding"], a: 2 },
+      { q: "What does FHE allow developers to do?", o: ["Hide the smart contract code", "Compute directly on encrypted data", "Compress blockchain data", "Decrypt transactions publicly"], a: 1 },
+      { q: "What is FHEVM?", o: ["A new blockchain consensus algorithm", "A virtual machine that runs encrypted smart contracts", "A mobile crypto wallet", "A key management token"], a: 1 },
+      { q: "Which programming language is used to write contracts in Zama Protocol?", o: ["Python", "Go", "Solidity", "Rust"], a: 2 },
+      { q: "What does the Zama Protocol combine to maintain performance and privacy?", o: ["On-chain and off-chain components", "Public and private blockchains", "Decentralized and centralized databases", "Open-source and closed-source tools"], a: 0 },
+      { q: "What is the main role of the Key Management Service (KMS)?", o: ["To store user passwords", "To generate and manage encryption keys securely", "To mine encrypted blocks", "To compress blockchain data"], a: 1 },
+      { q: "What are coprocessors responsible for in the protocol?", o: ["Managing NFT minting", "Running off-chain encrypted computations", "Building blockchain bridges", "Handling token swaps"], a: 1 },
+      { q: "What does the Gateway do?", o: ["It manages encrypted data flow and coordinates off-chain services", "It hosts the blockchain explorer", "It sends marketing emails", "It controls gas fees"], a: 0 },
+      { q: "Which of the following is NOT part of Zama Protocol’s architecture?", o: ["FHEVM Solidity Library", "Gateway", "Coprocessor", "Proof-of-Stake Validator"], a: 3 },
+      { q: "What type of data does the Zama Protocol keep encrypted?", o: ["Only metadata", "Transaction amounts and user data", "Chain IDs", "Source codes"], a: 1 },
+      { q: "What warning is included in the official docs about the testnet?", o: ["It is unstable but safe to store funds", "It is audited and ready for production", "It is not audited and not for production use", "It requires mining before testing"], a: 2 },
+      { q: "Which of these is an example use-case for Zama Protocol?", o: ["Open DeFi dashboards", "Confidential auctions and voting", "Token burning", "Wallet authentication"], a: 1 },
+      { q: "What are the encrypted Solidity types introduced by FHEVM?", o: ["euint, eint, ebool, ebytes", "privuint, cryptoint, secretbool", "uint_priv, int_priv", "sealuint, sealint"], a: 0 },
+      { q: "What is a main advantage of Zama Protocol for blockchain developers?", o: ["They can run private computations while keeping composability", "They can remove all smart contract fees", "They can hide contract logic from themselves", "They can bypass EVM gas usage"], a: 0 }
+    ];
+
+    // UI elements
+    const qEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const qindexEl = document.getElementById('qindex');
+    const qcountEl = document.getElementById('qcount');
+    const progressBar = document.getElementById('progress-bar');
+    const nextBtn = document.getElementById('next-btn');
+    const resultArea = document.getElementById('result-area');
+    const quizArea = document.getElementById('quiz-area');
+    const meter = document.getElementById('meter');
+    const iqNumEl = document.getElementById('iq-num');
+    const iqPctEl = document.getElementById('iq-pct');
+    const finalText = document.getElementById('final-text');
+    const shareBtn = document.getElementById('share');
+    const retryBtn = document.getElementById('retry');
+
+    let current = 0;
+    let score = 0;
+    const total = quizData.length;
+    qcountEl.textContent = total;
+
+    function loadQuestion() {
+      const data = quizData[current];
+      qEl.textContent = data.q;
+      optionsEl.innerHTML = '';
+      data.o.forEach((opt, i) => {
+        const b = document.createElement('button');
+        b.className = "flex items-center gap-3 justify-center p-3 rounded-full border border-white/6 hover:bg-white/3 transition";
+        b.style.padding = "12px";
+        b.innerHTML = `<span style="width:18px;height:18px;border-radius:50%;border:2px solid var(--zama-yellow);display:inline-block"></span><span>${opt}</span>`;
+        b.onclick = () => {
+          // disable all
+          [...optionsEl.children].forEach(x => x.disabled = true);
+          // mark selected style
+          if (i === data.a) {
+            b.style.background = "linear-gradient(90deg, rgba(255,247,200,0.95), var(--zama-yellow))";
+            b.style.color = "#000";
+            score++;
+          } else {
+            b.style.opacity = "0.45";
+          }
+          nextBtn.classList.remove('hidden');
+        };
+        optionsEl.appendChild(b);
+      });
+
+      qindexEl.textContent = current + 1;
+      progressBar.style.width = `${(current / total) * 100}%`;
+      nextBtn.classList.add('hidden');
+    }
+
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if (current < total) {
+        loadQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      quizArea.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      const pct = Math.round((score / total) * 100);
+      const iq = Math.round((score / total) * 150 + 50); // maps 0..100% to 50..200 iq range
+      // animate meter
+      const circumference = 2 * Math.PI * 40; // r=40
+      const offset = circumference * (1 - (pct / 100));
+      meter.style.transition = "stroke-dashoffset 1.4s cubic-bezier(.2,.9,.3,1)";
+      meter.style.strokeDashoffset = offset;
+      // set texts
+      iqNumEl.textContent = iq;
+      iqPctEl.textContent = pct + "%";
+      finalText.textContent = `You answered ${score} out of ${total} correctly. Well done!`;
+      // ensure progress finished
+      document.getElementById('progress-bar').style.width = "100%";
+    }
+
+    // Retry
+    retryBtn.addEventListener('click', () => {
+      score = 0; current = 0;
+      resultArea.classList.add('hidden');
+      quizArea.classList.remove('hidden');
+      loadQuestion();
+    });
+
+    // Share
+    shareBtn.addEventListener('click', () => {
+      const pct = Math.round((score / total) * 100);
+      const iq = Math.round((score / total) * 150 + 50);
+      const text = encodeURIComponent(`I just scored ${iq} IQ on the Zama Protocol Quiz! 🧠\nTry it yourself at https://zamaquiz.vercel.app #Zama #FHE #Web3`);
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    });
+
+    // init meter stroke settings
+    (function initMeter(){
+      const circumference = 2 * Math.PI * 40; // r=40
+      meter.style.strokeDasharray = circumference;
+      meter.style.strokeDashoffset = circumference;
+      meter.style.transition = "stroke-dashoffset 1.2s ease";
+    })();
+
+    // initial load
+    loadQuestion();
+  </script>
+</body>
+</html>
