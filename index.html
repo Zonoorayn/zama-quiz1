@@ -3,16 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zama IQ Quiz</title>
+    <title>Zama Protocol IQ Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              zamaYellow: "#FFD700",
-              zamaDark: "#0A0A0A",
-              zamaGray: "#1E1E1E",
+              zamaPurple: "#6C63FF",
+              zamaDark: "#0B0C10",
+              zamaBlue: "#1F2833",
+              zamaAccent: "#45A29E",
             },
           },
         },
@@ -20,33 +21,33 @@
     </script>
   </head>
 
-  <body class="bg-gradient-to-br from-zamaDark via-zamaGray to-black min-h-screen flex items-center justify-center text-white font-sans">
-    <div class="max-w-md w-full bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl text-center relative">
-      <h1 class="text-3xl font-extrabold mb-4 text-zamaYellow tracking-wide">Zama IQ Challenge ⚡</h1>
-      <p class="text-sm text-gray-400 mb-6">Test your understanding of FHE & Privacy!</p>
+  <body class="bg-gradient-to-br from-zamaDark to-zamaBlue min-h-screen flex items-center justify-center text-white font-sans">
+    <div class="max-w-md w-full bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl text-center relative">
+      <h1 class="text-3xl font-extrabold mb-4 text-zamaAccent tracking-wide">Zama Protocol IQ Test</h1>
+      <p class="text-sm text-gray-400 mb-6">Prove your knowledge of privacy & FHE!</p>
 
       <div id="progress" class="h-2 w-full bg-gray-700 rounded-full mb-6 overflow-hidden">
-        <div id="progress-bar" class="h-full bg-zamaYellow transition-all duration-300" style="width: 0%"></div>
+        <div id="progress-bar" class="h-full bg-zamaAccent transition-all duration-300" style="width: 0%"></div>
       </div>
 
       <div id="quiz">
         <p id="question" class="text-lg font-medium mb-6"></p>
         <div id="options" class="grid grid-cols-2 gap-3"></div>
-        <button id="next-btn" class="mt-8 bg-zamaYellow text-black hover:bg-yellow-400 font-bold px-5 py-2 rounded-full transition hidden">Next</button>
+        <button id="next-btn" class="mt-8 bg-zamaPurple hover:bg-zamaAccent px-5 py-2 rounded-full transition hidden">Next</button>
       </div>
 
       <div id="result" class="hidden">
-        <h2 class="text-2xl font-bold mb-4 text-zamaYellow">🎯 Your Zama IQ</h2>
+        <h2 class="text-2xl font-bold mb-4 text-zamaAccent">🎯 Your Zama IQ</h2>
         <p id="score" class="text-lg mb-6"></p>
-        <div id="badge" class="inline-block bg-zamaYellow text-black px-4 py-2 rounded-full mb-4 shadow-lg font-bold"></div>
+        <div id="badge" class="inline-block bg-zamaPurple text-white px-4 py-2 rounded-full mb-4 shadow-lg"></div>
         <div class="flex justify-center gap-4">
-          <button id="retry-btn" class="bg-zamaGray px-4 py-2 rounded-full hover:bg-zamaYellow hover:text-black transition">Try Again</button>
-          <button id="share-btn" class="bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition">Share on X</button>
+          <button id="retry-btn" class="bg-zamaAccent px-4 py-2 rounded-full hover:bg-zamaPurple transition">Try Again</button>
+          <button id="share-btn" class="bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition">Share IQ on X</button>
         </div>
       </div>
 
       <footer class="mt-8 text-xs text-gray-500">
-        © 2025 Built with 💛 by a Zama Believer
+        Built with 💜 by a Zama fan
       </footer>
     </div>
 
@@ -80,16 +81,17 @@
         opts.innerHTML = "";
         data.o.forEach((opt, i) => {
           const btn = document.createElement("button");
-          btn.className =
-            "border border-zamaYellow/40 hover:bg-zamaYellow/20 transition rounded-full py-3 px-2 text-sm flex items-center justify-center gap-2";
-          btn.innerHTML = `<div class='w-5 h-5 border-2 border-zamaYellow rounded-full'></div><span>${opt}</span>`;
+          btn.className = "border border-zamaAccent/40 hover:bg-zamaAccent/20 transition rounded-full py-3 px-2 text-sm";
+          btn.innerHTML = `<div class='flex items-center justify-center gap-2'>
+                            <div class='w-5 h-5 border-2 border-zamaAccent rounded-full'></div>
+                            <span>${opt}</span>
+                          </div>`;
           btn.onclick = () => {
             if (i === data.a) score++;
             next.style.display = "block";
-            opts.querySelectorAll("button").forEach((b, idx) => {
+            opts.querySelectorAll("button").forEach(b => {
               b.disabled = true;
-              if (idx === data.a) b.classList.add("bg-zamaYellow", "text-black");
-              else b.classList.add("opacity-40");
+              b.classList.add(i === data.a ? "bg-zamaAccent/50" : "opacity-40");
             });
           };
           opts.appendChild(btn);
@@ -109,7 +111,7 @@
         result.classList.remove("hidden");
         const iq = Math.round((score / quizData.length) * 150 + 50);
         scoreEl.textContent = `You scored ${score}/${quizData.length}.`;
-        badge.textContent = `⚡ Zama IQ: ${iq}`;
+        badge.textContent = `🧠 Zama IQ: ${iq}`;
         progress.style.width = "100%";
       }
 
@@ -121,9 +123,9 @@
       };
 
       document.getElementById("share-btn").onclick = () => {
-        const iq = badge.textContent.replace("⚡ Zama IQ: ", "");
-        const tweet = encodeURIComponent(`I just scored a Zama IQ of ${iq}! ⚡  
-Take the Zama Quiz and test your FHE knowledge!  
+        const iq = badge.textContent.replace("🧠 Zama IQ: ", "");
+        const tweet = encodeURIComponent(`I just scored a Zama IQ of ${iq}! 💡  
+Take the Zama Protocol Quiz and test your FHE knowledge.  
 #Zama #FHE #Web3Privacy`);
         window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
       };
