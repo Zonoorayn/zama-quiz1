@@ -1,136 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zama Protocol IQ Quiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              zamaPurple: "#6C63FF",
-              zamaDark: "#0B0C10",
-              zamaBlue: "#1F2833",
-              zamaAccent: "#45A29E",
-            },
-          },
-        },
-      };
-    </script>
-  </head>
-
-  <body class="bg-gradient-to-br from-zamaDark to-zamaBlue min-h-screen flex items-center justify-center text-white font-sans">
-    <div class="max-w-md w-full bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl text-center relative">
-      <h1 class="text-3xl font-extrabold mb-4 text-zamaAccent tracking-wide">Zama Protocol IQ Test</h1>
-      <p class="text-sm text-gray-400 mb-6">Prove your knowledge of privacy & FHE!</p>
-
-      <div id="progress" class="h-2 w-full bg-gray-700 rounded-full mb-6 overflow-hidden">
-        <div id="progress-bar" class="h-full bg-zamaAccent transition-all duration-300" style="width: 0%"></div>
-      </div>
-
-      <div id="quiz">
-        <p id="question" class="text-lg font-medium mb-6"></p>
-        <div id="options" class="grid grid-cols-2 gap-3"></div>
-        <button id="next-btn" class="mt-8 bg-zamaPurple hover:bg-zamaAccent px-5 py-2 rounded-full transition hidden">Next</button>
-      </div>
-
-      <div id="result" class="hidden">
-        <h2 class="text-2xl font-bold mb-4 text-zamaAccent">🎯 Your Zama IQ</h2>
-        <p id="score" class="text-lg mb-6"></p>
-        <div id="badge" class="inline-block bg-zamaPurple text-white px-4 py-2 rounded-full mb-4 shadow-lg"></div>
-        <div class="flex justify-center gap-4">
-          <button id="retry-btn" class="bg-zamaAccent px-4 py-2 rounded-full hover:bg-zamaPurple transition">Try Again</button>
-          <button id="share-btn" class="bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-600 transition">Share IQ on X</button>
-        </div>
-      </div>
-
-      <footer class="mt-8 text-xs text-gray-500">
-        Built with 💜 by a Zama fan
-      </footer>
-    </div>
-
-    <script>
-      const quizData = [
-        { q: "What technology powers Zama?", o: ["Zero-Knowledge Proofs", "FHE", "AI", "Layer 2s"], a: 1 },
-        { q: "FHE allows computation on?", o: ["Plain data", "Encrypted data", "Hash data", "Random keys"], a: 1 },
-        { q: "Zama FHEVM extends which language?", o: ["Solidity", "Python", "Rust", "C++"], a: 0 },
-        { q: "Zama’s mission is to make privacy?", o: ["Paid", "Optional", "Default", "Hidden"], a: 2 },
-        { q: "FHEVM stands for?", o: ["Fully Homomorphic Encryption Virtual Machine", "Fast Hash Executor VM", "Full Hyper Engine", "Functional Hybrid Engine"], a: 0 },
-        { q: "FHE is mostly about?", o: ["Speed", "Privacy", "Transparency", "Scalability"], a: 1 },
-        { q: "Zama helps run?", o: ["Private smart contracts", "Public ledgers", "AI bots", "Wallets"], a: 0 },
-        { q: "FHE computations are done on?", o: ["Decrypted data", "Encrypted data", "Plain bytes", "Metadata"], a: 1 },
-        { q: "Zama SDKs support which areas?", o: ["AI & Blockchain", "Web2 apps", "Cloud storage", "Streaming"], a: 0 },
-        { q: "Zama Protocol is redefining?", o: ["Blockchain speed", "Web3 privacy", "Crypto trading", "File storage"], a: 1 },
-      ];
-
-      let current = 0, score = 0;
-      const q = document.getElementById("question");
-      const opts = document.getElementById("options");
-      const next = document.getElementById("next-btn");
-      const result = document.getElementById("result");
-      const quiz = document.getElementById("quiz");
-      const scoreEl = document.getElementById("score");
-      const progress = document.getElementById("progress-bar");
-      const badge = document.getElementById("badge");
-
-      function loadQ() {
-        const data = quizData[current];
-        q.textContent = data.q;
-        opts.innerHTML = "";
-        data.o.forEach((opt, i) => {
-          const btn = document.createElement("button");
-          btn.className = "border border-zamaAccent/40 hover:bg-zamaAccent/20 transition rounded-full py-3 px-2 text-sm";
-          btn.innerHTML = `<div class='flex items-center justify-center gap-2'>
-                            <div class='w-5 h-5 border-2 border-zamaAccent rounded-full'></div>
-                            <span>${opt}</span>
-                          </div>`;
-          btn.onclick = () => {
-            if (i === data.a) score++;
-            next.style.display = "block";
-            opts.querySelectorAll("button").forEach(b => {
-              b.disabled = true;
-              b.classList.add(i === data.a ? "bg-zamaAccent/50" : "opacity-40");
-            });
-          };
-          opts.appendChild(btn);
-        });
-        next.style.display = "none";
-        progress.style.width = `${(current / quizData.length) * 100}%`;
-      }
-
-      next.onclick = () => {
-        current++;
-        if (current < quizData.length) loadQ();
-        else showResult();
-      };
-
-      function showResult() {
-        quiz.classList.add("hidden");
-        result.classList.remove("hidden");
-        const iq = Math.round((score / quizData.length) * 150 + 50);
-        scoreEl.textContent = `You scored ${score}/${quizData.length}.`;
-        badge.textContent = `🧠 Zama IQ: ${iq}`;
-        progress.style.width = "100%";
-      }
-
-      document.getElementById("retry-btn").onclick = () => {
-        score = 0; current = 0;
-        result.classList.add("hidden");
-        quiz.classList.remove("hidden");
-        loadQ();
-      };
-
-      document.getElementById("share-btn").onclick = () => {
-        const iq = badge.textContent.replace("🧠 Zama IQ: ", "");
-        const tweet = encodeURIComponent(`I just scored a Zama IQ of ${iq}! 💡  
-Take the Zama Protocol Quiz and test your FHE knowledge.  
-#Zama #FHE #Web3Privacy`);
-        window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
-      };
-
-      loadQ();
-    </script>
-  </body>
-</html>
+{
+  "quizTitle": "Zama_FHE Quiz",
+  "developer": "Zunnoorayn",
+  "themeColor": "yellow",
+  "questions": [
+    {
+      "question": "What does FHE stand for in Zama_FHE?",
+      "options": ["Fully Hidden Encryption", "Fully Homomorphic Encryption", "Fast High Encryption", "Functional Hash Encoding"],
+      "answer": 1
+    },
+    {
+      "question": "What is the main purpose of Zama_FHE?",
+      "options": ["Speed up crypto transactions", "Enable computations on encrypted data", "Create NFTs", "Store files in the cloud"],
+      "answer": 1
+    },
+    {
+      "question": "Which programming language does Zama_FHE primarily support?",
+      "options": ["Python", "C++", "Solidity", "Rust"],
+      "answer": 2
+    },
+    {
+      "question": "Zama_FHE allows computations on:",
+      "options": ["Plain text only", "Encrypted data", "Images only", "Tokens only"],
+      "answer": 1
+    },
+    {
+      "question": "Which layer does Zama_FHE aim to improve in Web3?",
+      "options": ["Storage layer", "Consensus layer", "Privacy layer", "Transaction fee layer"],
+      "answer": 2
+    },
+    {
+      "question": "FHE in Zama helps users to:",
+      "options": ["Hide their private keys", "Perform calculations without decrypting data", "Send tokens faster", "Mine coins"],
+      "answer": 1
+    },
+    {
+      "question": "Zama_FHE is considered similar to HTTPS in what way?",
+      "options": ["It speeds up websites", "It encrypts and protects data", "It reduces gas fees", "It provides NFTs"],
+      "answer": 1
+    },
+    {
+      "question": "Which sector benefits the most from Zama_FHE?",
+      "options": ["Social media", "Data privacy and AI", "Gaming", "Marketing"],
+      "answer": 1
+    },
+    {
+      "question": "Zama_FHE computations on encrypted data are:",
+      "options": ["Only approximate", "Fully functional without decryption", "Only for testing", "Limited to small numbers"],
+      "answer": 1
+    },
+    {
+      "question": "What makes Zama_FHE different from traditional encryption?",
+      "options": ["It cannot be broken", "Computations are possible without decrypting", "It uses longer keys", "It works offline only"],
+      "answer": 1
+    },
+    {
+      "question": "Zama_FHE can be integrated with which technology?",
+      "options": ["Web3 apps", "Only Bitcoin", "Only Ethereum wallets", "Traditional databases only"],
+      "answer": 0
+    },
+    {
+      "question": "Which type of encryption does Zama_FHE use?",
+      "options": ["Symmetric encryption", "Asymmetric encryption", "Homomorphic encryption", "Hash-based encryption"],
+      "answer": 2
+    },
+    {
+      "question": "A major challenge in FHE is:",
+      "options": ["User interface", "Computation speed", "Token creation", "Wallet storage"],
+      "answer": 1
+    },
+    {
+      "question": "Zama_FHE ensures privacy without:",
+      "options": ["Any computation", "Revealing the original data", "Using blockchain", "Internet connection"],
+      "answer": 1
+    },
+    {
+      "question": "Which of these can be processed using Zama_FHE?",
+      "options": ["Plain text documents", "Encrypted medical records", "Open source code", "Public APIs"],
+      "answer": 1
+    },
+    {
+      "question": "What is one of the unique features of Zama_FHE for developers?",
+      "options": ["Ready-made NFTs", "Ability to run FHE computations in smart contracts", "Automatic token airdrops", "Built-in wallet"],
+      "answer": 1
+    },
+    {
+      "question": "Which problem does Zama_FHE solve in AI?",
+      "options": ["Slow computations", "Privacy leakage of sensitive data", "Model accuracy", "GPU usage"],
+      "answer": 1
+    },
+    {
+      "question": "Zama_FHE uses FHE to perform calculations without:",
+      "options": ["Any internet", "Accessing raw data", "CPU", "Storage"],
+      "answer": 1
+    },
+    {
+      "question": "Developers use Zama_FHE to:",
+      "options": ["Make encrypted databases", "Create Bitcoin miners", "Host websites only", "Trade crypto automatically"],
+      "answer": 0
+    },
+    {
+      "question": "Which statement best describes Zama_FHE?",
+      "options": ["A traditional blockchain for fast transactions", "A privacy layer that allows computations on encrypted data", "A token for NFT marketplaces", "A payment gateway"],
+      "answer": 1
+    }
+  ]
+}
